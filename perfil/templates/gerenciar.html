@@ -39,9 +39,9 @@
       <div class="col-md-5">
         <p class="fonte-destaque">Nova conta</p>
           
-        <form action="" method="POST">
+        <form action="{% url 'cadastrar_banco' %}" method="POST" enctype="multipart/form-data"> {% csrf_token %}
           <label>Nome da conta</label>
-          <input type="text" name="apelido" class="form-control" placeholder="Nome">
+          <input type="text" name="nome" class="form-control" placeholder="Nome">
           <br>
           <label>Banco</label>
           <select name="banco" class="form-select">
