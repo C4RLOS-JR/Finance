@@ -16,20 +16,20 @@
         <p class="fonte-destaque">Suas contas</p>
         <hr>
 
-        <div class="contas">
+        {% for conta in contas %}
+          <div class="contas">
 
+            <div class="lista-contas-main">
+              <span><img width="30px" src="{{conta.icone.url}}">&nbsp&nbsp{{conta.nome}}</span>
+              
+              <span class="total-conta positivo">R$ {{conta.valor}}&nbsp&nbsp&nbsp <a href="{% url 'excluir_banco' conta.id %}"><img src="{% static 'perfil/img/exit.png' %}"></a></span>
+            </div>
             
-          <div class="lista-contas-main">
-            <span><img width="10%" src="#">&nbsp&nbspNubank</span>
-
-            <span class="total-conta positivo ">R$ 1.800,00&nbsp&nbsp&nbsp <a href="#"><img src="{% static 'perfil/img/exit.png' %}"></a></span>
+            
           </div>
-          <br>
-            
-            
-        </div>
-
-        <hr>
+          
+          <hr>
+        {% endfor %}
         <span class="fonte-destaque">Total:</span>
         <span class="positivo total-conta font-destaque">R$ 1.800,00</span>
       </div>
@@ -45,7 +45,9 @@
           <br>
           <label>Banco</label>
           <select name="banco" class="form-select">
-              <option value="NU">Escolha um banco</option>
+              <option value="">Escolha um banco</option>
+              <option value="NU">NuBank</option>
+              <option value="CE">Caixa Econômica</option>
           </select>
           <br>
           <label>Tipo</label>

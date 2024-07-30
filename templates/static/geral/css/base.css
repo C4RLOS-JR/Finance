@@ -10,3 +10,8 @@ body {
   --contrast-color: #69D2CD;
   --differential-color: #E96363;
 }
+
+.menu-itens {
+  text-decoration: none;
+  color: white;
+}

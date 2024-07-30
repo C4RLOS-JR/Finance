@@ -1,4 +1,4 @@
 venv
 *.pyc
 *.sqlite3
-media/opcao/*
+media/icones/*
