@@ -19,6 +19,7 @@
         {% endfor %}
       {% endif %}
     </div>
+    <br>
 
     <div class="row">
 
@@ -96,11 +97,8 @@
           {% for categoria in categorias %}
             <div class="lista-contas-main">
               <span>{{categoria}}</span>
-              {% if categoria.essencial %}
-                <span class="total-conta img"><a href="#"><img src="{% static 'perfil/img/essencial.png' %}"></a></span>
-              {% else %}
-                <span class="total-conta img"><a href="#"><img src="{% static 'perfil/img/nao_essencial.png' %}"></a></span>
-              {% endif %}
+              
+              <span class="total-conta img"><a href="{% url 'update_categoria' categoria.id %}"><img src="{% if categoria.essencial %} {% static 'perfil/img/essencial.png' %} {% else %} {% static 'perfil/img/nao_essencial.png' %} {% endif %}"></a></span>
             </div>
             <hr>
           {% endfor %}

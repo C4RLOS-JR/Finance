@@ -47,24 +47,25 @@
 
       <div class="col-md-4">
         <div class="card">
+          <span class="fonte-destaque">Suas contas</span>
+          <div class="div-contas">
+            {% for conta in contas %}
+            <div class="lista-conta">
+              <span>{{conta.nome}}</span>
+              <span class="total-conta {% if conta.valor > 0 %} positivo {% elif conta.valor < 0 %} negativo {% endif %}">R$ {{conta.valor}}</span>
+            </div>
+            <br>
+            {% endfor %}
+          </div>
+
           <div class="saldo">
             <span class="fonte-destaque">Saldo total</span>
             <br>
-            <span class="font-light">R$ 1.200,00</span>
+            <span class="font-light valor-total {% if valor_total > 0 %} positivo {% elif valor_total < 0 %} negativo {% endif %}">R$ {{valor_total}}</span>
           </div>
           <hr class="hr-borda">
-          <span class="fonte-destaque">Suas contas</span>
 
-          <div class="div-contas">
-              
-            <div class="lista-conta">
-              <span>Nubank</span>
-              <span class="total-conta">R$ 3.000,00</span>
-            </div>
-              
-          </div>
-            <hr class="hr-borda">
-            <a href="{% url 'gerenciar' %}" class="botao-principal">Gerenciar contas</a>
+          <a href="{% url 'gerenciar' %}" class="botao-principal">Gerenciar contas</a>
         </div>
           
       </div>

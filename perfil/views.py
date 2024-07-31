@@ -3,17 +3,20 @@ from django.http import HttpResponse
 from .models import Conta, Categoria
 from django.contrib.messages import constants
 from django.contrib import messages
+from .utils import calcular_total
 
 def home(request):
-  return render(request, 'home.html')
+  contas = Conta.objects.all()
+  valor_total = calcular_total(contas, 'valor')
+
+  return render(request, 'home.html',{
+    'contas': contas,
+    'valor_total': valor_total,})
 
 def gerenciar(request):
   contas = Conta.objects.all()
   categorias = Categoria.objects.all()
-  valor_total = 0
-
-  for conta in contas:
-    valor_total += conta.valor
+  valor_total = calcular_total(contas, 'valor')
 
   return render(request, 'gerenciar.html',{
     'contas': contas,
@@ -68,4 +71,12 @@ def cadastrar_categoria(request):
   nova_categoria.save()
 
   messages.add_message(request, constants.SUCCESS, 'Categoria adicionada com sucesso!')
+  return redirect('gerenciar')
+
+def update_categoria(request, categoria_id):
+  categoria = Categoria.objects.get(id=categoria_id)
+
+  categoria.essencial = not categoria.essencial
+  categoria.save()
+
   return redirect('gerenciar')

@@ -46,13 +46,13 @@
 }
 
 .img {
-  margin-right: 30px;
+  margin-right: 20px;
 }
 
 .valor-total {
   font-weight: bold;
   font-size: x-large;
-  margin-right: 35px;
+  margin-right: 30px;
 }
 
 .botao-principal {
@@ -99,5 +99,5 @@
 }
 
 .messages {
-  height: 65px;
+  height: 45px;
 }
