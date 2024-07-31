@@ -41,6 +41,24 @@
   float: right;
 }
 
+.total-categoria {
+  color: white;
+  float: right;
+}
+
+.itens-categoria {
+  font-weight: bold;
+  font-size: x-large;
+}
+
+.img {
+  margin-right: 30px;
+}
+
+.valor-total {
+  margin-right: 42px;
+}
+
 .botao-principal {
 
   text-decoration: none;
@@ -74,4 +92,15 @@
 .icone-setas {
   width: 50%;
   display: inline;
+}
+
+.card-nova  {
+  border: gray, 1px, solid;
+  background-color: #312f2f;
+  border-radius: 15px;
+  padding: 10px;
+}
+
+.messages {
+  height: 50px;
 }
