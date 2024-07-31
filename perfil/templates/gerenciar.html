@@ -32,15 +32,15 @@
 
             <div class="lista-contas-main">
               <span><img width="30px" src="{{conta.icone.url}}">&nbsp&nbsp{{conta.nome}}</span>
-              <span class="total-conta positivo">R$ {{conta.valor}}&nbsp&nbsp&nbsp <a href="{% url 'excluir_banco' conta.id %}"><img src="{% static 'perfil/img/delete.png' %}"></a></span>
+              <span class="total-conta {% if conta.valor > 0 %} positivo {% elif conta.valor < 0 %} negativo {% endif %}">R$ {{conta.valor}}&nbsp&nbsp&nbsp <a href="{% url 'excluir_banco' conta.id %}"><img src="{% static 'perfil/img/delete.png' %}"></a></span>
             </div>
             
-          </div>
+          </div> 
           <hr>
         {% endfor %}
 
         <span class="fonte-destaque">Total:</span>
-        <span class="positivo total-conta font-destaque valor-total">R$ {{valor_total}}</span>
+        <span class="total-conta font-destaque valor-total {% if valor_total > 0 %} positivo {% elif valor_total < 0 %} negativo {% endif %}">R$ {{valor_total}}</span>
       </div>
 
       <div class="col-md-2"></div>
@@ -118,7 +118,7 @@
           <input type="text" name="categoria" class="form-control">
           <br>
 
-          <input type="checkbox" name="essencial" value="essencial"><label class="positivo">&nbspEssencial</label>
+          <input type="checkbox" name="essencial" value="essencial"><label>&nbspEssencial</label>
           <br>
           <br>
           <input style="width: 100%" type="submit" class="botao-principal" value="Adicionar Categoria">
