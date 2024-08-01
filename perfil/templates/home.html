@@ -14,11 +14,11 @@
         <a style="text-decoration: none; color: white;" href="#">
           <div class="card">
             <div class="row">
-              <div class="col-md-8">
-                <span  class="fonte-destaque">RS 1.000,00</span>
-              </div>
               <div class="col-md">
                 <img class="icone-setas" src="{% static 'perfil/img/entradas.png' %}">
+              </div>
+              <div class="col-md-8">
+                <span  class="fonte-destaque">RS 1.000,00</span>
               </div>
             </div>
 
@@ -29,11 +29,11 @@
         <a style="text-decoration: none; color: white;" href="#">
           <div class="card">
             <div class="row">
-              <div class="col-md-8">
-                <span  class="fonte-destaque">RS 1.000,00</span>
-              </div>
               <div class="col-md">
                 <img class="icone-setas" src="{% static 'perfil/img/saidas.png' %}">
+              </div>
+              <div class="col-md-8">
+                <span  class="fonte-destaque">RS 1.000,00</span>
               </div>
             </div> 
           </div>
@@ -46,6 +46,7 @@
     <div class="row">
 
       <div class="col-md-4">
+        <!-- Suas contas -->
         <div class="card">
           <span class="fonte-destaque">Suas contas</span>
           <div class="div-contas">
@@ -67,10 +68,19 @@
 
           <a href="{% url 'gerenciar' %}" class="botao-principal">Gerenciar contas</a>
         </div>
-          
+        <br>
+        <!-- Planejamento -->
+        <div class="card">
+          <div class="saldo">
+            <span class="fonte-destaque">Planejamento</span>
+          </div>
+            <hr class="hr-borda">
+            <a href="#" class="botao-principal">Definir planejamento</a>
+        </div>
       </div>
 
       <div class="col-md-8">
+        <!-- Receita/Despesa -->
         <div class="card">
           <div class="row">
             <div class="col-md">
@@ -86,7 +96,6 @@
                 <br>
                 <span class="font-light">R$ 0.000,00</span>
               </div>
-
             </div>
 
           </div>
@@ -96,22 +105,8 @@
           <hr class="hr-borda">
           <a href="#" class="botao-principal">Gerenciar dados mensais</a>
         </div>
-      </div>
-
-    </div>
-    <br>
-
-    <div class="row">
-      <div class="col-md-4">
-        <div class="card">
-          <div class="saldo">
-            <span class="fonte-destaque">Planejamento</span>
-          </div>
-            <hr class="hr-borda">
-            <a href="#" class="botao-principal">Definir planejamento</a>
-        </div>
-      </div>
-      <div class="col-md-8">
+        <br>
+        <!-- Equilíbrio financeiro -->
         <div class="card">
           <span class="fonte-destaque">Equilibrio financeiro</span>
           <hr class="hr-borda">
@@ -130,14 +125,8 @@
           <a href="#" class="botao-principal">Alterar categorias essenciais</a>
 
         </div>
-      </div>
-    </div>
-    <br>
-    <div class="row">
-      <div class="col-md-4">
-      </div>
-      
-      <div class="col-md-8">
+        <br>
+        <!-- Gerenciar contas -->
         <div class="card">
           <span class="fonte-destaque">Gerenciar contas</span>
           <hr class="hr-borda">

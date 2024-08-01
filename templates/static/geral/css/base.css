@@ -16,3 +16,7 @@ body {
   text-decoration: none;
   color: white;
 }
+
+.messages {
+  height: 45px;
+}

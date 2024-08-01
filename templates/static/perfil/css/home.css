@@ -98,6 +98,8 @@
   display: inline;
 }
 
-.messages {
-  height: 45px;
+.icone-banco {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
 }
