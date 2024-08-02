@@ -33,20 +33,28 @@ def cadastrar_banco(request):
   if (len(nome.strip()) == 0) or (len(banco) == 0) or (len(valor.strip()) == 0):
     messages.add_message(request, constants.ERROR, 'Preencha todos os campos!')
     return redirect('gerenciar')
+
+  if not valor.isnumeric():
+    messages.add_message(request, constants.ERROR, 'O valor precisa ser um número!')
+    return redirect('gerenciar')
+  
   if not icone:
     icone = 'default/icon_bank.png'
-    
-  conta = Conta(
-    nome = nome,
-    banco = banco,
-    tipo = tipo,
-    valor = valor,
-    icone = icone
-  )
-  conta.save()
 
-  messages.add_message(request, constants.SUCCESS, 'Conta adicionada com sucesso!')
-  return redirect('gerenciar')
+  try:  
+    conta = Conta(
+      nome = nome,
+      banco = banco,
+      tipo = tipo,
+      valor = valor,
+      icone = icone)
+    conta.save()
+
+    messages.add_message(request, constants.SUCCESS, 'Conta adicionada com sucesso!')
+    return redirect('gerenciar')
+  except:
+    messages.add_message(request, constants.ERROR, 'Algo deu errado...tente novamente ou fale com um administrador!')
+    return redirect('gerenciar')
 
 def excluir_banco(request, conta_id):
   conta = Conta.objects.get(id=conta_id)
@@ -64,14 +72,18 @@ def cadastrar_categoria(request):
 
   # Fazer  as validações:
 
-  nova_categoria = Categoria(
-    categoria = categoria,
-    essencial = essencial
-  )
-  nova_categoria.save()
+  try:
+    nova_categoria = Categoria(
+      categoria = categoria,
+      essencial = essencial
+    )
+    nova_categoria.save()
 
-  messages.add_message(request, constants.SUCCESS, 'Categoria adicionada com sucesso!')
-  return redirect('gerenciar')
+    messages.add_message(request, constants.SUCCESS, 'Categoria adicionada com sucesso!')
+    return redirect('gerenciar')
+  except:
+    messages.add_message(request, constants.ERROR, 'Algo deu errado...tente novamente ou fale com um administrador!')
+    return redirect('gerenciar')
 
 def update_categoria(request, categoria_id):
   categoria = Categoria.objects.get(id=categoria_id)

@@ -22,7 +22,7 @@
     <div class="row">
 
       <div class="col-md-7">
-        <form action="" method="POST">{% csrf_token %}
+        <form action="{% url 'novo_valor' %}" method="POST">{% csrf_token %}
           <div class="row">
             <div class="col-md">
               <label>Valor</label>
@@ -31,10 +31,11 @@
 
             <div class="col-md">
               <label>Categoria</label>
-              <select name="categoria" class="form-select">
-                <option value="1">Lazer</option>
-                  
-              </select>
+                <select name="categoria" class="form-select">
+                  {% for categoria in categorias %}
+                    <option value="{{categoria.id}}">{{categoria}}</option> 
+                  {% endfor %}
+                </select>
             </div>
           </div>
           <br>
@@ -50,7 +51,9 @@
             <div class="col-md">
               <label>Conta</label>
               <select name="conta" class="form-select">
-                <option value="1">Nubank</option>
+                {% for conta in contas %}
+                  <option value="{{conta.id}}">{{conta.nome}}</option>
+                {% endfor %}
               </select>
             </div>
           </div>
