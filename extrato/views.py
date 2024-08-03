@@ -11,7 +11,7 @@ def novo_valor(request):
   if request.method == 'GET':
     return render(request, 'novo_valor.html', {'contas': contas, 'categorias': categorias})
   
-  if request.method == 'POST':
+  elif request.method == 'POST':
     valor = request.POST.get('valor')
     categoria = request.POST.get('categoria')
     descricao = request.POST.get('descricao')
@@ -30,14 +30,17 @@ def novo_valor(request):
     try:
       novo_valor = Valores(
         valor = valor,
-        categoria = categoria,
+        categoria_id = categoria,
         descricao = descricao,
         data = data,
-        conta = conta,
+        conta_id = conta,
         tipo = tipo)
       novo_valor.save()
 
-      messages.add_message(request, constants.SUCCESS, 'Valor cadastrado com sucesso!')
+      if tipo == 'S':
+        messages.add_message(request, constants.SUCCESS, 'Saída cadastrada com sucesso!')
+      else:
+        messages.add_message(request, constants.SUCCESS, 'Entrada cadastrada com sucesso!')
       return redirect('novo_valor')
     except:
       messages.add_message(request, constants.ERROR, 'Algo deu errado...tente novamente ou fale com um administrador!')
