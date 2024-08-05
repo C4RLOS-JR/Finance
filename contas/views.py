@@ -5,11 +5,11 @@ from .models import Valores
 from django.contrib.messages import constants
 from django.contrib import messages
 
-def novo_valor(request):
+def movimentacao(request):
   if request.method == 'GET':
     contas = Conta.objects.all()
     categorias = Categoria.objects.all()
-    return render(request, 'novo_valor.html', {'contas': contas, 'categorias': categorias})
+    return render(request, 'movimentacao.html', {'contas': contas, 'categorias': categorias})
   
   if request.method == 'POST':
     valor = request.POST.get('valor')
@@ -22,11 +22,11 @@ def novo_valor(request):
 
     if (len(valor.strip())==0) or (len(descricao.strip())==0) or (len(data)==0) or (len(tipo)==0):
       messages.add_message(request, constants.ERROR, 'Preencha todos os campos!')
-      return redirect('novo_valor')
+      return redirect('movimentacao')
     
     # if not valor.isnumeric():
     #   messages.add_message(request, constants.ERROR, 'O valor precisa ser um número!')
-    #   return redirect('novo_valor')
+    #   return redirect('movimentacao')
 
 
     try:
@@ -44,17 +44,22 @@ def novo_valor(request):
       if tipo == 'S':
         if conta.valor - float(valor) < 0:
           messages.add_message(request, constants.ERROR, 'Essa conta não tem saldo suficiente para essa despesa...escolha outra conta!')
-          return redirect('novo_valor')
+          return redirect('movimentacao')
         conta.valor -= float(valor)
         messages.add_message(request, constants.SUCCESS, 'Saída cadastrada com sucesso!')
       else:
         conta.valor += float(valor)
         messages.add_message(request, constants.SUCCESS, 'Entrada cadastrada com sucesso!')
       conta.save()
-      return redirect('novo_valor')
+      return redirect('movimentacao')
     except:
       messages.add_message(request, constants.ERROR, 'Algo deu errado...tente novamente ou fale com um administrador!')
-      return redirect('novo_valor')
+      return redirect('movimentacao')
     
 def extrato(request):
-  return render(request, 'extrato.html')
+  if request.method == 'GET':
+    contas = Conta.objects.all()
+    categorias = Categoria.objects.all()
+    movimentacao = Valores.objects.all()
+    
+    return render(request, 'extrato.html', {'contas': contas, 'categorias': categorias, 'movimentacao': movimentacao})

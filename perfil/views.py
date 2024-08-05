@@ -70,7 +70,9 @@ def cadastrar_categoria(request):
   categoria = request.POST.get('categoria')
   essencial = bool(request.POST.get('essencial'))
 
-  # Fazer  as validações:
+  if len(categoria.strip()) == 0:
+    messages.add_message(request, constants.ERROR, 'O campo categoria não pode ficar em branco!')
+    return redirect('gerenciar')
 
   try:
     nova_categoria = Categoria(
