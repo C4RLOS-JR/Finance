@@ -55,3 +55,6 @@ def novo_valor(request):
     except:
       messages.add_message(request, constants.ERROR, 'Algo deu errado...tente novamente ou fale com um administrador!')
       return redirect('novo_valor')
+    
+def extrato(request):
+  return render(request, 'extrato.html')
