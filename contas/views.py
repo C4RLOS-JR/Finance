@@ -1,11 +1,16 @@
-from calendar import month
+from curses.ascii import HT
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from perfil.models import Conta, Categoria
 from .models import Valores
 from django.contrib.messages import constants
 from django.contrib import messages
-from datetime import datetime
+from datetime import date, datetime
+from django.template.loader import render_to_string
+import os
+from django.conf import settings
+from weasyprint import HTML
+from io import BytesIO
 
 def movimentacao(request):
   if request.method == 'GET':
@@ -29,7 +34,6 @@ def movimentacao(request):
     # if not valor.isnumeric():
     #   messages.add_message(request, constants.ERROR, 'O valor precisa ser um número!')
     #   return redirect('movimentacao')
-
 
     try:
       conta = Conta.objects.get(id=id_conta)
@@ -81,3 +85,14 @@ def extrato(request):
   
   return render(request, 'extrato.html', {'contas': contas, 'categorias': categorias, 'movimentacao': movimentacao})
 
+def exportar_pdf(request):
+  movimentacao = Valores.objects.filter(data__month=datetime.now().month) # Filtra e traz os valores do mês atual.
+  path_template = os.path.join(settings.BASE_DIR, 'templates/partials/gerar_extrato.html')  # Salva o caminho de HTML na variável.
+  template_render = render_to_string(path_template, {'movimentacao': movimentacao}) # Converte o HTML em string.
+
+  path_output = BytesIO() # Cria uma instância em memória.
+  HTML(string=template_render).write_pdf(path_output) # Escreve o HTML e salva na instância da memória.
+  path_output.seek(0) # Volta o ponteiro para o início do arquivo.
+
+  # Envia o arquivo para o usuário em PDF.
+  return FileResponse(path_output, filename=f'extrato_{datetime.now().month}-{datetime.now().year}.pdf')

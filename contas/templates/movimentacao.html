@@ -26,19 +26,20 @@
           <div class="row">
             <div class="col-md">
               <label>Valor</label>
-              <input name="valor" type="text" class="form-control">
+              <input name="valor" type="number" class="form-control" placeholder="R$">
             </div>
 
             <div class="col-md">
               <label>Categoria</label>
                 <select name="categoria" class="form-select">
+                  <option value="">Selecione uma categoria</option>
                   {% for categoria in categorias %}
                     <option value="{{categoria.id}}">{{categoria}}</option> 
                   {% endfor %}
                 </select>
+                <a href="{% url 'gerenciar' %}">Criar categoria</a>
             </div>
           </div>
-          <br>
           <label>Descrição</label>
           <textarea name="descricao" class="form-control"></textarea>
           <br>
@@ -51,14 +52,15 @@
             <div class="col-md">
               <label>Conta</label>
               <select name="id_conta" class="form-select">
+                <option value="">Selecione uma conta</option>
                 {% for conta in contas %}
                   <option value="{{conta.id}}">{{conta.nome}}</option>
                 {% endfor %}
               </select>
+              <a href="{% url 'gerenciar' %}">Criar conta</a>
             </div>
           </div>
-          <br>
-          <input type="radio" name="tipo" value="E"> <label class="positivo">Entrada</label>
+          <input type="radio" name="tipo" value="E"> <label class="positivo">Entrada&nbsp&nbsp</label>
           <input type="radio" name="tipo" value="S"> <label class="negativo">Saída</label>
           <br>
           <br>
