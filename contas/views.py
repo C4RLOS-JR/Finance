@@ -1,9 +1,11 @@
+from calendar import month
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from perfil.models import Conta, Categoria
 from .models import Valores
 from django.contrib.messages import constants
 from django.contrib import messages
+from datetime import datetime
 
 def movimentacao(request):
   if request.method == 'GET':
@@ -57,9 +59,25 @@ def movimentacao(request):
       return redirect('movimentacao')
     
 def extrato(request):
-  if request.method == 'GET':
-    contas = Conta.objects.all()
-    categorias = Categoria.objects.all()
-    movimentacao = Valores.objects.all()
-    
-    return render(request, 'extrato.html', {'contas': contas, 'categorias': categorias, 'movimentacao': movimentacao})
+  contas = Conta.objects.all()
+  categorias = Categoria.objects.all()
+  id_conta = request.GET.get('id_conta')
+  id_categoria = request.GET.get('id_categoria')
+  periodo = request.GET.get('periodo')
+
+  movimentacao = Valores.objects.filter(data__month=datetime.now().month) # Filtra e traz os valores do mês atual.
+
+  if id_conta:
+    movimentacao = movimentacao.filter(conta__id=id_conta)
+  if id_categoria:
+    movimentacao = movimentacao.filter(categoria__id=id_categoria)
+
+  # Fazer  filtrar por período.
+  # if periodo:
+  #   periodo = datetime.now().day - int(periodo)
+  #   if periodo < 0:
+  #     periodo = 1
+  #   movimentacao = movimentacao.filter()
+  
+  return render(request, 'extrato.html', {'contas': contas, 'categorias': categorias, 'movimentacao': movimentacao})
+

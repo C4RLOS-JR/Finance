@@ -11,12 +11,13 @@
   <br>
   <br>
   <div class='container'>
-    <form action="" method="GET">
+    <form action="{% url 'extrato' %}" method="GET">
       <div class="row">
           
         <div class="col-md">
           <label>Conta</label>
-          <select name="conta" class="form-select">
+          <select name="id_conta" class="form-select">
+            <option value="">Selecione uma conta</option>
             {% for conta in contas %}
               <option value="{{conta.id}}">{{conta}}</option>
             {% endfor %}
@@ -25,7 +26,8 @@
 
         <div class="col-md">
           <label>Categoria</label>
-          <select name="categoria" class="form-select">
+          <select name="id_categoria" class="form-select">
+            <option value="">Selecione uma categoria</option>
             {% for categoria in categorias %}
               <option value="{{categoria.id}}">{{categoria}}</option>
             {% endfor %}
@@ -35,7 +37,8 @@
         <div class="col-md">
           <label>Período</label>
           <select name="periodo" class="form-select">
-            <option>Últimos 7 dias</option>
+            <option value="">Selecione um período</option>
+            <option value="7">Últimos 7 dias</option>
           </select>
         </div>  
       </div>
@@ -43,6 +46,9 @@
       <div class="row">
         <div class="col-md-2">
           <input style="width: 100%" type="submit" class="botao-principal" value="Filtrar">
+        </div>
+        <div class="col-md-2">
+          <a href="{% url 'extrato' %}" style="width: 100%" type="button" class="botao-principal">Todos</a>
         </div>
         <div class="col-md-2">
           <a href="" class="botao-secundario">Exportar extrato</a>

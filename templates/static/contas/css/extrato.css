@@ -28,5 +28,6 @@ tr{
     width: 100%;
     display: block;
     text-align: center;
-
+    font-weight: bold;
+    font-size: 15px;
 }
