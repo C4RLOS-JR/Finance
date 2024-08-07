@@ -1,2 +1,2 @@
 Bibliotécas necessárias:
-  django pillow
+  django pillow weasyprint

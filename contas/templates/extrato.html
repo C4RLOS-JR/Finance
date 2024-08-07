@@ -3,7 +3,6 @@
 
 {% block 'head' %}
   <link href="{% static 'perfil/css/home.css' %}" rel="stylesheet">
-  <link href="{% static 'perfil/css/gerenciar.css' %}" rel="stylesheet">
   <link href="{% static 'contas/css/extrato.css' %}" rel="stylesheet">
 {% endblock %}
 
@@ -77,9 +76,9 @@
             <td>{{valor.data}}</td>
             <td>
               {% if valor.tipo == 'S'%}
-                <img width="30px" src="{% static 'perfil/img/saidas.png' %}">
+                <img width="25px" src="{% static 'perfil/img/saidas.png' %}">
               {% else %}
-                <img width="30px" src="{% static 'perfil/img/entradas.png' %}">
+                <img width="25px" src="{% static 'perfil/img/entradas.png' %}">
               {% endif %}
             </td>
             <td>R$ {{valor.valor}}</td>
