@@ -7,9 +7,9 @@
 {% endblock %}
 
 {% block 'body' %}
-  <br>
-  <div class="container">
 
+  <div class="container">
+    <br>
     <!--Mensagens-->
     <div class="row messages">
       {% if messages %}
@@ -18,7 +18,6 @@
         {% endfor %}
       {% endif %}
     </div>
-    <br>
     
     <p class="fonte-destaque">Definir planejamento</p>
     <div class="card">
@@ -34,19 +33,15 @@
           <tr class="linha">
             <td>{{categoria}}</td>
             <td><input type="number" id="valor-categoria-{{categoria.id}}" class="form-control" value="{{categoria.valor_planejamento}}"></td>
-            <td><button onclick="modificar_valor_planejamento({{categoria.id}})" style="width: 100%;" class="botao-secundario">Salvar</button></td>         
+            <td><button onclick="modificar_valor_planejamento({{categoria.id}})" style="width: 100%;" class="botao-secundario">Alterar</button></td>         
           </tr>
         {% endfor %}
-          
-
       </table>
-    
 
     </div>
   </div>
 
   <script>
-    
     function modificar_valor_planejamento(id) { // Recebe o id da categoria
       valor = document.getElementById('valor-categoria-'+id).value  // Captura o valor do elemento pelo seu id
       
@@ -55,12 +50,11 @@
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({novo_valor: valor})
       }).then(function(result){
-        return result.json()
-      }).then(function(data){
-        console.log(data)
+        if (result) {
+          window.location.href = "";
+        }
       })
     }
   </script>
-
 
 {% endblock %}

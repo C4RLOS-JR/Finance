@@ -3,12 +3,13 @@
 
 {% block 'head' %}
   <link href="{% static 'perfil/css/home.css' %}" rel="stylesheet">
-  <link href="{% static 'perfil/css/gerenciar.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block 'body' %}
 
   <div class="container">
+    <br>
+    <!--Mensagens-->
     <div class="row messages">
       {% if messages %}
         {% for message in messages %}
@@ -16,7 +17,6 @@
         {% endfor %}
       {% endif %}
     </div>
-    <br>
     
     <span class="fonte-destaque">Adicionar entradas/saídas</span>
     <div class="row">
