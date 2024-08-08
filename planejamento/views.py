@@ -19,5 +19,5 @@ def modificar_valor_planejamento(request, id):
   categoria.valor_planejamento = novo_valor
   categoria.save()
 
-  messages.add_message(request, constants.SUCCESS, 'Valor do planejamento alterado com sucesso')
-  return redirect('definir_planejamento')
+  messages.add_message(request, constants.SUCCESS, 'Valor do planejamento salvo com sucesso!')
+  return JsonResponse({'status': 'Sucesso'})
