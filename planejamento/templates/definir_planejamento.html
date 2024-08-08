@@ -7,10 +7,19 @@
 {% endblock %}
 
 {% block 'body' %}
-
+  <br>
   <div class="container">
+
+    <!--Mensagens-->
+    <div class="row messages">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {{message.tags}}" role="alert">{{message}}</div>
+        {% endfor %}
+      {% endif %}
+    </div>
     <br>
-    <br>
+    
     <p class="fonte-destaque">Definir planejamento</p>
     <div class="card">
     
@@ -41,8 +50,14 @@
     function modificar_valor_planejamento(id) { // Recebe o id da categoria
       valor = document.getElementById('valor-categoria-'+id).value  // Captura o valor do elemento pelo seu id
       
-      fetch('planejamento/modificar_valor_planejamento/'+id,{
-        
+      fetch('/planejamento/modificar_valor_planejamento/'+id,{ // O fetch faz uma requisição para a url.
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({novo_valor: valor})
+      }).then(function(result){
+        return result.json()
+      }).then(function(data){
+        console.log(data)
       })
     }
   </script>
