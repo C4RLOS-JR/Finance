@@ -54,7 +54,7 @@
             {% for conta in contas %}
             <div class="lista-conta">
               <span>{{conta.nome}}</span>
-              <span class="total-conta {% if conta.valor > 0 %} positivo {% elif conta.valor < 0 %} negativo {% endif %}">R$ {{conta.valor}}</span>
+              <span class="total-conta {% if conta.valor > 0 %} positivo {% elif conta.valor < 0 %} negativo {% endif %}">R$ {{conta.valor|floatformat:2}}</span>
             </div>
             <br>
             {% endfor %}
@@ -63,7 +63,7 @@
           <div class="saldo">
             <span class="fonte-destaque">Saldo total</span>
             <br>
-            <span class="font-light valor-total {% if valor_total > 0 %} positivo {% elif valor_total < 0 %} negativo {% endif %}">R$ {{valor_total}}</span>
+            <span class="font-light valor-total {% if valor_total_contas > 0 %} positivo {% elif valor_total_contas < 0 %} negativo {% endif %}">R$ {{valor_total_contas|floatformat:2}}</span>
           </div>
           <hr class="hr-borda">
 
@@ -87,9 +87,9 @@
 
                   <div class="col-md">
                     <span style="float: right !important;">
-                      <span>R$ {{categoria.valor_gasto}}</span>
+                      <span>R$ {{categoria.valor_gasto|floatformat:2}}</span>
                       <span> | </span>
-                      <span class="{% if categoria.valor_planejamento > categoria.valor_gasto %} positivo {% else %} negativo {% endif %}">R$ {{categoria.valor_planejamento}}</span>
+                      <span class="{% if categoria.valor_planejamento > categoria.valor_gasto %} positivo {% else %} negativo {% endif %}">R$ {{categoria.valor_planejamento|floatformat:2}}</span>
                     </span>
                   </div>
                 </div>
@@ -102,6 +102,27 @@
           {% endfor %}
 
           <hr class="hr-borda">
+
+          <div class="row">
+            <div class="col-md">
+              <h3 style="float: left">Total</h3>
+            </div>
+
+            <div class="col-md">
+              <span style="float: right !important;">
+                <span>R$ {{valor_total_saidas|floatformat:2}}</span>
+                <span> | </span>
+                <span class="{% if valor_total_planejamento > valor_total_saidas %} positivo {% else %} negativo {% endif %}">R$ {{valor_total_planejamento|floatformat:2}}</span>
+              </span>
+            </div>
+          </div>
+
+          <div class="progress" style="height: 30px;">
+            <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: {{percentual_planejamento}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+
+          <hr class="hr-borda">
+          
           <a href="{% url 'definir_planejamento' %}" class="botao-principal">Definir planejamento</a>
         </div>
       </div>

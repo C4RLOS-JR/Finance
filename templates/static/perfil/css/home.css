@@ -8,6 +8,7 @@
   background-color: var(--main-color);
   border-radius: 10px;
   padding: 10px;
+  height:fit-content;
 }
 
 .fonte-destaque {

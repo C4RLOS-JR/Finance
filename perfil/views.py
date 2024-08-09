@@ -1,19 +1,29 @@
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .models import Conta, Categoria
+from contas.models import Movimentacao
 from django.contrib.messages import constants
 from django.contrib import messages
 from .utils import calcular_total
+from datetime import datetime
 
 def home(request):
   contas = Conta.objects.all()
   categorias = Categoria.objects.all()
-  valor_total = calcular_total(contas, 'valor')
+  saidas = Movimentacao.objects.filter(data__month=datetime.now().month).filter(tipo='S')
+  valor_total_contas = calcular_total(contas, 'valor')
+  valor_total_saidas = calcular_total(saidas, 'valor')
+  valor_total_planejamento = calcular_total(categorias, 'valor_planejamento')
+  percentual_planejamento = int((valor_total_saidas * 100) / valor_total_planejamento)
+
 
   return render(request, 'home.html',{
     'contas': contas,
-    'valor_total': valor_total,
-    'categorias': categorias})
+    'valor_total_contas': valor_total_contas,
+    'categorias': categorias,
+    'valor_total_saidas': valor_total_saidas,
+    'valor_total_planejamento': valor_total_planejamento,
+    'percentual_planejamento': percentual_planejamento })
 
 def gerenciar(request):
   contas = Conta.objects.all()
@@ -23,7 +33,7 @@ def gerenciar(request):
   return render(request, 'gerenciar.html',{
     'contas': contas,
     'valor_total': valor_total,
-    'categorias': categorias})
+    'categorias': categorias })
   
 def cadastrar_banco(request):
   nome = request.POST.get('nome')
@@ -31,13 +41,10 @@ def cadastrar_banco(request):
   tipo = request.POST.get('tipo')
   valor = request.POST.get('valor')
   icone = request.FILES.get('icone')
+  valor = valor.replace(',', '.')
 
   if (len(nome.strip()) == 0) or (len(banco) == 0) or (len(valor.strip()) == 0):
     messages.add_message(request, constants.ERROR, 'Preencha todos os campos!')
-    return redirect('gerenciar')
-
-  if not valor.isnumeric():
-    messages.add_message(request, constants.ERROR, 'O valor precisa ser um número!')
     return redirect('gerenciar')
   
   if not icone:

@@ -12,7 +12,7 @@ def definir_planejamento(request):
 
 @csrf_exempt
 def modificar_valor_planejamento(request, id):
-  novo_valor = json.load(request)['novo_valor']
+  novo_valor = json.load(request)['novo_valor'].replace(',', '.')
   categoria = Categoria.objects.get(id=id)
 
   if str(categoria.valor_planejamento) != novo_valor:

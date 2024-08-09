@@ -32,7 +32,7 @@
 
             <div class="lista-contas-main">
               <span><img class="icone-banco" src="{{conta.icone.url}}">&nbsp&nbsp{{conta.nome}}</span>
-              <span class="total-conta {% if conta.valor > 0 %} positivo {% elif conta.valor < 0 %} negativo {% endif %}">R$ {{conta.valor}}&nbsp&nbsp&nbsp <a href="{% url 'excluir_banco' conta.id %}"><img src="{% static 'perfil/img/delete.png' %}"></a></span>
+              <span class="total-conta {% if conta.valor > 0 %} positivo {% elif conta.valor < 0 %} negativo {% endif %}">R$ {{conta.valor|floatformat:2}}&nbsp&nbsp&nbsp <a href="{% url 'excluir_banco' conta.id %}"><img src="{% static 'perfil/img/delete.png' %}"></a></span>
             </div>
             
           </div> 
@@ -40,7 +40,7 @@
         {% endfor %}
 
         <span class="fonte-destaque">Total:</span>
-        <span class="total-conta font-destaque valor-total {% if valor_total > 0 %} positivo {% elif valor_total < 0 %} negativo {% endif %}">R$ {{valor_total}}</span>
+        <span class="total-conta font-destaque valor-total {% if valor_total > 0 %} positivo {% elif valor_total < 0 %} negativo {% endif %}">R$ {{valor_total|floatformat:2}}</span>
       </div>
 
       <div class="col-md-2"></div>
@@ -68,7 +68,7 @@
           </select>
           <br>
           <label>Valor</label>
-          <input type="number" name="valor" class="form-control" placeholder="R$">
+          <input type="number" name="valor" class="form-control" placeholder="R$" step="0.01">
           <br>
           <input type="file" placeholder="Ícone" name="icone">
           <br>
@@ -109,7 +109,7 @@
 
       <!--Nova Categoria-->
       <div class="col-md-5 card-nova">
-        <span class="fonte-destaque">Nova categoria</span>
+        <p class="fonte-destaque">Nova categoria</p>
 
         <form action="{% url 'cadastrar_categoria' %}" method="POST"> {% csrf_token %}
           <label>Categoria</label>

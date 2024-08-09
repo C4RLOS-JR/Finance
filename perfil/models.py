@@ -5,7 +5,7 @@ from .utils import calcular_total
 class Categoria(models.Model):
   categoria = models.CharField(max_length=50)
   essencial = models.BooleanField(default=False)
-  valor_planejamento = models.IntegerField(default=0)
+  valor_planejamento = models.FloatField(default=0)
 
   def __str__(self):
     return self.categoria
@@ -22,7 +22,7 @@ class Categoria(models.Model):
   
   def percentual_gasto(self):
     return int((self.valor_gasto() * 100) / self.valor_planejamento)
-
+  
 
 class Conta(models.Model):
   banco_choices = (

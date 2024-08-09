@@ -81,7 +81,7 @@
                 <img width="25px" src="{% static 'perfil/img/entradas.png' %}">
               {% endif %}
             </td>
-            <td>R$ {{valor.valor}}</td>
+            <td class="{% if valor.tipo == 'S' %} negativo {% else %} positivo {% endif %}">R$ {{valor.valor|floatformat:2}}</td>
               
           </tr>
         {% endfor %}
