@@ -1,7 +1,7 @@
 from django.db import models
 from perfil.models import Categoria, Conta
 
-class Valores(models.Model):
+class Movimentacao(models.Model):
   choice_tipo = (
     ('E', 'ENTRADA'), 
     ('S', 'SAIDA')

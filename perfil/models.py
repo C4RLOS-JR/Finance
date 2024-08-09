@@ -11,13 +11,13 @@ class Categoria(models.Model):
     return self.categoria
   
   def valor_gasto(self):  # Soma o valor total gasto nas movimentações de saída.
-    from contas.models import Valores
-    valores = Valores.objects.filter(categoria__id=self.id).filter(data__month=datetime.now().month).filter(tipo='S')
+    from contas.models import Movimentacao
+    valores = Movimentacao.objects.filter(categoria__id=self.id).filter(data__month=datetime.now().month).filter(tipo='S')
     return calcular_total(valores, 'valor') # calcular_total(objetos, campo)
   
   def saidas(self): # Retorna somente as movimentações de saída.
-    from contas.models import Valores
-    saidas = Valores.objects.filter(categoria__id=self.id).filter(tipo='S')
+    from contas.models import Movimentacao
+    saidas = Movimentacao.objects.filter(categoria__id=self.id).filter(tipo='S')
     return saidas
 
 

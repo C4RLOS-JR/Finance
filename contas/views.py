@@ -1,8 +1,7 @@
-from curses.ascii import HT
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, FileResponse
 from perfil.models import Conta, Categoria
-from .models import Valores
+from .models import Movimentacao
 from django.contrib.messages import constants
 from django.contrib import messages
 from datetime import date, datetime
@@ -38,7 +37,7 @@ def movimentacao(request):
     try:
       conta = Conta.objects.get(id=id_conta)
       
-      novo_valor = Valores(
+      novo_valor = Movimentacao(
         valor = valor,
         categoria_id = categoria,
         descricao = descricao,
@@ -69,7 +68,7 @@ def extrato(request):
   id_categoria = request.GET.get('id_categoria')
   periodo = request.GET.get('periodo')
 
-  movimentacao = Valores.objects.filter(data__month=datetime.now().month) # Filtra e traz os valores do mês atual.
+  movimentacao = Movimentacao.objects.filter(data__month=datetime.now().month) # Filtra e traz os valores do mês atual.
 
   if id_conta:
     movimentacao = movimentacao.filter(conta__id=id_conta)
@@ -86,7 +85,7 @@ def extrato(request):
   return render(request, 'extrato.html', {'contas': contas, 'categorias': categorias, 'movimentacao': movimentacao})
 
 def exportar_pdf(request):
-  movimentacao = Valores.objects.filter(data__month=datetime.now().month) # Filtra e traz os valores do mês atual.
+  movimentacao = Movimentacao.objects.filter(data__month=datetime.now().month) # Filtra e traz os valores do mês atual.
   path_template = os.path.join(settings.BASE_DIR, 'templates/partials/gerar_extrato.html')  # Salva o caminho de HTML na variável.
   template_render = render_to_string(path_template, {'movimentacao': movimentacao}) # Converte o HTML em string.
 
