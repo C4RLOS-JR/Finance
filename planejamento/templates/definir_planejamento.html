@@ -18,6 +18,7 @@
         {% endfor %}
       {% endif %}
     </div>
+    <br>
     
     <p class="fonte-destaque">Definir planejamento</p>
     <div class="card">
@@ -30,11 +31,15 @@
         </tr>
 
         {% for categoria in categorias %}
-          <tr class="linha">
-            <td>{{categoria}}</td>
-            <td><input type="number" id="valor-categoria-{{categoria.id}}" class="form-control" value="{{categoria.valor_planejamento}}"></td>
-            <td><button onclick="modificar_valor_planejamento({{categoria.id}})" style="width: 100%;" class="botao-secundario">Alterar</button></td>         
-          </tr>
+          {% for saida in categoria.saidas %}
+            {% if saida.tipo == 'S' %}
+              <tr class="linha">
+                <td>{{categoria}}</td>
+                <td><input type="number" id="valor-categoria-{{categoria.id}}" class="form-control" value="{{categoria.valor_planejamento}}"></td>
+                <td><button onclick="modificar_valor_planejamento({{categoria.id}})" style="width: 100%;" class="botao-secundario">Alterar</button></td>         
+              </tr>
+            {% endif %}
+          {% endfor %}
         {% endfor %}
       </table>
 

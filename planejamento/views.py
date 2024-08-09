@@ -16,9 +16,6 @@ def modificar_valor_planejamento(request, id):
   novo_valor = json.load(request)['novo_valor']
   categoria = Categoria.objects.get(id=id)
 
-  print(type(categoria.valor_planejamento))
-  print(type(novo_valor))
-
   if str(categoria.valor_planejamento) != novo_valor:
     categoria.valor_planejamento = novo_valor
     categoria.save()
