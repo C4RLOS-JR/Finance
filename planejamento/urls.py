@@ -4,4 +4,5 @@ from . import views
 urlpatterns = [
     path('definir_planejamento/', views.definir_planejamento, name='definir_planejamento'),
     path('modificar_valor_planejamento/<int:id>', views.modificar_valor_planejamento, name='modificar_valor_planejamento'),
+    path('ver_planejamento/', views.ver_planejamento, name='ver_planejamento'),
 ]

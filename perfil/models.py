@@ -1,5 +1,6 @@
+from datetime import datetime
 from django.db import models
-from django.forms import CharField
+from .utils import calcular_total
 
 class Categoria(models.Model):
   categoria = models.CharField(max_length=50)
@@ -8,6 +9,11 @@ class Categoria(models.Model):
 
   def __str__(self):
     return self.categoria
+  
+  def valor_gasto(self):
+    from contas.models import Valores
+    valores = Valores.objects.filter(categoria__id=self.id).filter(data__month=datetime.now().month).filter(tipo='S')
+    return calcular_total(valores, 'valor') # calcular_total(objetos, campo)
 
 
 class Conta(models.Model):

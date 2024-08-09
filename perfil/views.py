@@ -16,7 +16,7 @@ def home(request):
 def gerenciar(request):
   contas = Conta.objects.all()
   categorias = Categoria.objects.all()
-  valor_total = calcular_total(contas, 'valor')
+  valor_total = calcular_total(contas, 'valor') # calcular_total(objetos, campo)
 
   return render(request, 'gerenciar.html',{
     'contas': contas,
