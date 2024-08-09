@@ -23,7 +23,4 @@ def modificar_valor_planejamento(request, id):
     return JsonResponse({'status': 'Sucesso'})
   return JsonResponse({'status': 'Mantido'})
 
-def ver_planejamento(request):
-  categorias = Categoria.objects.all()
-  return render(request, 'ver_planejamento.html', {'categorias': categorias})
 

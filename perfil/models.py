@@ -19,6 +19,9 @@ class Categoria(models.Model):
     from contas.models import Movimentacao
     saidas = Movimentacao.objects.filter(categoria__id=self.id).filter(tipo='S')
     return saidas
+  
+  def percentual_gasto(self):
+    return int((self.valor_gasto() * 100) / self.valor_planejamento)
 
 
 class Conta(models.Model):

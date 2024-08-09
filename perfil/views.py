@@ -7,11 +7,13 @@ from .utils import calcular_total
 
 def home(request):
   contas = Conta.objects.all()
+  categorias = Categoria.objects.all()
   valor_total = calcular_total(contas, 'valor')
 
   return render(request, 'home.html',{
     'contas': contas,
-    'valor_total': valor_total,})
+    'valor_total': valor_total,
+    'categorias': categorias})
 
 def gerenciar(request):
   contas = Conta.objects.all()
