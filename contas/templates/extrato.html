@@ -12,7 +12,9 @@
   <div class='container'>
     <form action="{% url 'extrato' %}" method="GET">
       <div class="row">
-          
+
+        <span class="fonte-destaque">Extrato</span>
+
         <div class="col-md">
           <label>Conta</label>
           <select name="id_conta" class="form-select">
@@ -42,21 +44,25 @@
         </div>  
       </div>
       <br>
+
       <div class="row">
+
         <div class="col-md-2">
           <input style="width: 100%" type="submit" class="botao-principal" value="Filtrar">
         </div>
+
         <div class="col-md-2">
           <a href="{% url 'extrato' %}" style="width: 100%" type="button" class="botao-principal">Todos</a>
         </div>
+
         <div class="col-md-2">
           <a href="{% url 'exportar_pdf' %}" class="botao-secundario">Exportar extrato</a>
         </div>
+
       </div>
     </form>
     <br>
     <br>
-
 
     <div class="card">
         

@@ -15,12 +15,14 @@ def modificar_valor_planejamento(request, id):
   novo_valor = json.load(request)['novo_valor'].replace(',', '.')
   categoria = Categoria.objects.get(id=id)
 
-  if str(categoria.valor_planejamento) != novo_valor:
+  if float(categoria.valor_planejamento) != float(novo_valor):
     categoria.valor_planejamento = novo_valor
     categoria.save()
 
-    messages.add_message(request, constants.SUCCESS, 'Valor do planejamento alterado com sucesso!')
+    messages.add_message(request, constants.SUCCESS, f'O valor do planejamento "{categoria}" alterado com sucesso!')
     return JsonResponse({'status': 'Sucesso'})
+  
+  messages.add_message(request, constants.ERROR, f'O valor do planejamento "{categoria}" não foi alterado!')
   return JsonResponse({'status': 'Mantido'})
 
 

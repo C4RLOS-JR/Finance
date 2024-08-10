@@ -10,14 +10,6 @@
 
   <div class="container">
     <br>
-    <!--Mensagens-->
-    <div class="row messages">
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert {{message.tags}}" role="alert">{{message}}</div>
-        {% endfor %}
-      {% endif %}
-    </div>
     <br>
     
     <p class="fonte-destaque">Definir planejamento</p>
@@ -25,9 +17,9 @@
     
       <table>
         <tr>
-          <th>Categoria</th>
-          <th>Valor</th>
-          <th>Ação</th>
+          <th><h3>Categoria</h3></th>
+          <th><h3>Valor</h3></th>
+          <th><h3>Ação</h3></th>
         </tr>
 
         {% for categoria in categorias %}
@@ -56,7 +48,7 @@
         body: JSON.stringify({novo_valor: valor})
       }).then(function(result){
         if (result) {
-          window.location.href = "";
+          window.location.href = "/perfil/home";
         }
       })
     }

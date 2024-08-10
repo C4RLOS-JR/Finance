@@ -1,12 +1,13 @@
 .card {
   width: 100%;
   background-color: var(--main-color);
+  border-radius: 15px;
   padding: 20px;
 }
 
 .card-nova {
   background-color: var(--main-color);
-  border-radius: 10px;
+  border-radius: 15px;
   padding: 10px;
   height:fit-content;
 }
@@ -52,8 +53,8 @@
 
 .valor-total {
   font-weight: bold;
-  font-size: x-large;
-  margin-right: 30px;
+  font-size:xx-large;
+  float: right;
 }
 
 .botao-principal {
@@ -61,7 +62,6 @@
   color: black;
   font-weight: bold;
   font-size: 18px;
-  
   padding: 10px;
   background-color: var(--contrast-color);
   text-align: center;
@@ -69,7 +69,7 @@
   border: none;
 }
 
-.saldo {
+.destaque {
   border-left: 4px solid var(--contrast-color);
   padding-left: 10px;
 }
@@ -93,8 +93,7 @@
   color: var(--negative-color);
 }
 
-
-.icone-setas {
+.icones {
   width: 50%;
   display: inline;
 }

@@ -11,20 +11,32 @@ def home(request):
   contas = Conta.objects.all()
   categorias = Categoria.objects.all()
   saidas = Movimentacao.objects.filter(data__month=datetime.now().month).filter(tipo='S')
+  entradas = Movimentacao.objects.filter(data__month=datetime.now().month).filter(tipo='E')
+  total_saidas = calcular_total(saidas, 'valor')
+  total_entradas = calcular_total(entradas, 'valor')
   valor_total_contas = calcular_total(contas, 'valor')
-  valor_total_saidas = calcular_total(saidas, 'valor')
   valor_total_planejamento = calcular_total(categorias, 'valor_planejamento')
-  percentual_planejamento = int((valor_total_saidas * 100) / valor_total_planejamento)
+  planejamento_saidas = 0
+  percentual_planejamento = 0
+
+  for saida in saidas:
+    if saida.categoria.valor_planejamento != 0: # Somar o valor total de saída se o valor de planejamento for diferente de 0.
+      planejamento_saidas += saida.valor
+
+  if planejamento_saidas and valor_total_planejamento:
+    percentual_planejamento = int((planejamento_saidas * 100) / valor_total_planejamento)
 
 
   return render(request, 'home.html',{
     'contas': contas,
-    'valor_total_contas': valor_total_contas,
     'categorias': categorias,
-    'valor_total_saidas': valor_total_saidas,
+    'total_saidas': total_saidas,
+    'total_entradas': total_entradas,
+    'valor_total_contas': valor_total_contas,
+    'valor_total_saidas': planejamento_saidas,
     'valor_total_planejamento': valor_total_planejamento,
     'percentual_planejamento': percentual_planejamento })
-
+  
 def gerenciar(request):
   contas = Conta.objects.all()
   categorias = Categoria.objects.all()

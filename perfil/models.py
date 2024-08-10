@@ -21,7 +21,9 @@ class Categoria(models.Model):
     return saidas
   
   def percentual_gasto(self):
-    return int((self.valor_gasto() * 100) / self.valor_planejamento)
+    if self.valor_planejamento:
+      return int((self.valor_gasto() * 100) / self.valor_planejamento)
+    return 0
   
 
 class Conta(models.Model):
