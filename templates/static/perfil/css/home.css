@@ -85,12 +85,20 @@
   padding-right: 10px;
 }
 
+.normal {
+  color: var(--contrast-color);
+}
+
 .positivo {
   color: var(--positive-color);
 }
 
 .negativo {
   color: var(--negative-color);
+}
+
+.atencao {
+  color: var(--warning-color);
 }
 
 .icones {
@@ -107,4 +115,18 @@
 a {
   text-decoration: none;
   color: #69D2CD;
+}
+
+.linha-conta {
+  background-color: var(--dark-color);
+  padding: 20px;
+  border-radius: 10px;
+  border-bottom: 2px solid var(--main-color);
+  border-top: 2px solid var(--main-color);
+}
+
+.text-center {
+  align-content: center;
+  font-weight: bold;
+  font-size: large;
 }

@@ -35,7 +35,8 @@ def home(request):
     'valor_total_contas': valor_total_contas,
     'valor_total_saidas': planejamento_saidas,
     'valor_total_planejamento': valor_total_planejamento,
-    'percentual_planejamento': percentual_planejamento })
+    'percentual_planejamento': percentual_planejamento
+    })
   
 def gerenciar(request):
   contas = Conta.objects.all()
@@ -45,7 +46,8 @@ def gerenciar(request):
   return render(request, 'gerenciar.html',{
     'contas': contas,
     'valor_total': valor_total,
-    'categorias': categorias })
+    'categorias': categorias
+    })
   
 def cadastrar_banco(request):
   nome = request.POST.get('nome')

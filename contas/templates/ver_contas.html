@@ -1,0 +1,189 @@
+{% extends 'bases/base.html' %}
+{% load static %}
+
+{% block 'titulo' %}Ver contas{% endblock  %}
+
+{% block 'head' %}
+    <link href="{% static 'perfil/css/home.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block 'body' %}
+
+  <div class="container">
+    <br>
+    <!--Mensagens-->
+    <div class="row messages">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {{message.tags}}" role="alert">{{message}}</div>
+        {% endfor %}
+      {% endif %}
+    </div>
+    <br>
+
+    <div class="row">
+        <div class="col-md-8">
+
+          <p class="fonte-destaque negativo">Contas vencidas</p>
+          <div class="card">
+            {% if contas_vencidas %}
+              {% for conta in contas_vencidas %}
+                <div class="linha-conta">
+                  <div class="row">
+                    <div class="col-md text-center">
+                      {{conta.titulo}}
+                    </div>
+                    <div class="col-md text-center">
+                      Venceu no dia {{conta.dia_pagamento}}
+                    </div>
+                    <div class="col-md text-center">
+                      <a href="{% url 'pagar_contas' conta.id %}" onclick="return confirmarPagamento();" class="botao-principal">Pagar</a>
+                    </div> 
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="linha-conta">
+                <div class="row">
+                  <div class="col-md text-center">
+                    Nenhuma conta vencida...
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+          <br>
+          <br>
+
+          <p class="fonte-destaque atencao">Contas próximas do vencimento</p>
+          <div class="card">
+            {% if contas_proximas_vencimento %}
+              {% for conta in contas_proximas_vencimento %}
+                <div class="linha-conta">
+                  <div class="row">
+                    <div class="col-md text-center">
+                      {{conta.titulo}}
+                    </div>
+                    <div class="col-md text-center">
+                      Vai vencer no dia {{conta.dia_pagamento}}
+                    </div>
+                    <div class="col-md text-center">
+                      <a href="{% url 'pagar_contas' conta.id %}" onclick="return confirmarPagamento();" class="botao-principal">Pagar</a>
+                    </div> 
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="linha-conta">
+                <div class="row">
+                  <div class="col-md text-center">
+                    Nenhuma conta próxima do vencimento...
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+          <br>
+          <br>
+
+          <p class="fonte-destaque normal">Contas ao longo do mês</p>
+          <div class="card">
+            {% if contas_restantes %}
+              {% for conta in contas_restantes %}
+                <div class="linha-conta">
+                  <div class="row">
+                    <div class="col-md text-center">
+                      {{conta.titulo}}
+                    </div>
+                    <div class="col-md text-center">
+                      Vencimento no dia {{conta.dia_pagamento}}
+                    </div>
+                    <div class="col-md text-center">
+                      <a href="{% url 'pagar_contas' conta.id %}" onclick="return confirmarPagamento();" class="botao-principal">Antecipar</a>
+                    </div> 
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="linha-conta">
+                <div class="row">
+                  <div class="col-md text-center">
+                    Nenhuma conta por aqui...
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+          <br>
+          <br>
+
+          <p class="fonte-destaque positivo">Contas pagas</p>
+          <div class="card">
+            {% if contas_pagas %}
+              {% for conta in contas_pagas %}
+                <div class="linha-conta">
+                  <div class="row">
+                    <div class="col-md text-center">
+                      {{conta.titulo}}
+                    </div>
+                    <div class="col-md text-center">
+                      Foi paga no dia {{conta.dia_pagamento}}
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="linha-conta">
+                <div class="row">
+                  <div class="col-md text-center">
+                    Nenhuma conta paga este mês...
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+
+      </div>
+
+      <div class="col-md-4">
+
+        <p class="fonte-destaque">Relatório</p>
+        <div class="card">
+          <div class="linha-conta">
+            <div class="row text-center">
+              
+              <div>
+                <span class="fonte-destaque negativo">Contas vencidas:&nbsp&nbsp</span>
+                <span class="fonte-destaque">{{contas_vencidas.count}}</span>
+              </div>              
+              <div>
+                <span class="fonte-destaque atencao">Contas á vencer:&nbsp&nbsp</span>
+                <span class="fonte-destaque">{{contas_proximas_vencimento.count}}</span>
+              </div>              
+              <div>
+                <span class="fonte-destaque normal">Contas á pagar:&nbsp&nbsp</span>
+                <span class="fonte-destaque">{{contas_restantes.count}}</span>
+              </div>              
+              <div>
+                <span class="fonte-destaque positivo">Contas pagas:&nbsp&nbsp</span>
+                <span class="fonte-destaque">{{contas_pagas.count}}</span>
+              </div>              
+            </div>
+            
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <br>
+  </div>
+
+
+  <script>
+    function confirmarPagamento() {
+        return confirm('Você tem certeza que deseja pagar este item?');
+    }
+  </script>
+
+
+{% endblock %}

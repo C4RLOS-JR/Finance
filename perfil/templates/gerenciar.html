@@ -1,6 +1,8 @@
 {% extends 'bases/base.html' %}
 {% load static %}
 
+{% block 'titulo' %}Gerenciar contas{% endblock  %}
+
 {% block 'head' %}
   <link href="{% static 'perfil/css/home.css' %}" rel="stylesheet">
   <link href="{% static 'perfil/css/gerenciar.css' %}" rel="stylesheet">
@@ -32,7 +34,7 @@
 
             <div class="lista-contas-main">
               <span><img class="icone-banco" src="{{conta.icone.url}}">&nbsp&nbsp{{conta.nome}}</span>
-              <span class="total-conta {% if conta.valor > 0 %} positivo {% elif conta.valor < 0 %} negativo {% endif %}">R$ {{conta.valor|floatformat:2}}&nbsp&nbsp&nbsp <a href="{% url 'excluir_banco' conta.id %}"><img src="{% static 'perfil/img/delete.png' %}"></a></span>
+              <span class="total-conta {% if conta.valor > 0 %} positivo {% elif conta.valor < 0 %} negativo {% endif %}">R$ {{conta.valor|floatformat:2}}&nbsp&nbsp&nbsp <a href="{% url 'excluir_banco' conta.id %}" onclick="return confirmarExcluir();"><img src="{% static 'perfil/img/delete.png' %}"></a></span>
             </div>
             
           </div> 
@@ -127,5 +129,10 @@
     </div>
   </div>
 
+  <script>
+    function confirmarExcluir() {
+        return confirm('Você tem certeza que deseja excluir essa conta?');
+    }
+  </script>
 
 {% endblock %}

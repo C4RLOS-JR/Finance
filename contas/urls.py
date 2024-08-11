@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('movimentacao/', views.movimentacao, name='movimentacao'),
-    path('extrato/', views.extrato, name='extrato'),
-    path('exportar_pdf/', views.exportar_pdf, name='exportar_pdf'),
+    path('definir_contas/', views.definir_contas, name='definir_contas'),
+    path('ver_contas/', views.ver_contas, name='ver_contas'),
+    path('pagar_contas/<int:conta_id>', views.pagar_contas, name='pagar_contas'),
 ]

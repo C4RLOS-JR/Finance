@@ -10,6 +10,7 @@ body {
   --contrast-color: #69D2CD;
   --negative-color: #f93a53;
   --positive-color: #00df79;
+  --warning-color: #FFD700;
 }
 
 .menu-itens {
@@ -20,4 +21,11 @@ body {
 
 .messages {
   height: 45px;
+}
+
+.menu {
+  position: fixed;  /* Fixa a navbar na tela */
+  top: 0;           /* Posiciona no topo da página */
+  width: 100%;      /* Ocupa a largura total da tela */
+  z-index: 1000;    /* Garante que a navbar fique sobre outros elementos */
 }

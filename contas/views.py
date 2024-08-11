@@ -1,15 +1,10 @@
+from datetime import datetime
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, FileResponse
-from perfil.models import Conta, Categoria
+from perfil.models import Categoria, Conta
+from .models import ContaPagar, ContaPaga
 from .models import Movimentacao
 from django.contrib.messages import constants
 from django.contrib import messages
-from datetime import date, datetime
-from django.template.loader import render_to_string
-import os
-from django.conf import settings
-from weasyprint import HTML
-from io import BytesIO
 
 def movimentacao(request):
   if request.method == 'GET':
@@ -61,37 +56,58 @@ def movimentacao(request):
       messages.add_message(request, constants.ERROR, 'Algo deu errado...tente novamente ou fale com um administrador!')
       return redirect('movimentacao')
     
-def extrato(request):
-  contas = Conta.objects.all()
+def definir_contas(request):
   categorias = Categoria.objects.all()
-  id_conta = request.GET.get('id_conta')
-  id_categoria = request.GET.get('id_categoria')
-  periodo = request.GET.get('periodo')
-
-  movimentacao = Movimentacao.objects.filter(data__month=datetime.now().month) # Filtra e traz os valores do mês atual.
-
-  if id_conta:
-    movimentacao = movimentacao.filter(conta__id=id_conta)
-  if id_categoria:
-    movimentacao = movimentacao.filter(categoria__id=id_categoria)
-
-  # Fazer  filtrar por período.
-  # if periodo:
-  #   periodo = datetime.now().day - int(periodo)
-  #   if periodo < 0:
-  #     periodo = 1
-  #   movimentacao = movimentacao.filter()
+  if request.method == 'GET':
+    return render(request, 'definir_contas.html', {'categorias': categorias})
   
-  return render(request, 'extrato.html', {'contas': contas, 'categorias': categorias, 'movimentacao': movimentacao})
+  elif request.method == 'POST':
+    titulo = request.POST.get('titulo')
+    categoria = request.POST.get('categoria')
+    descricao = request.POST.get('descricao')
+    valor = request.POST.get('valor')
+    dia_pagamento = request.POST.get('dia_pagamento')
 
-def exportar_pdf(request):
-  movimentacao = Movimentacao.objects.filter(data__month=datetime.now().month) # Filtra e traz os valores do mês atual.
-  path_template = os.path.join(settings.BASE_DIR, 'templates/partials/gerar_extrato.html')  # Salva o caminho de HTML na variável.
-  template_render = render_to_string(path_template, {'movimentacao': movimentacao}) # Converte o HTML em string.
+    if (len(titulo.strip())==0) and (len(categoria.strip())==0) and (len(valor.strip())==0) and (len(dia_pagamento.strip())==0):
+      messages.add_message(request, constants.ERROR, 'Preencha todos os campos!')
+      return redirect('definir_contas')
 
-  path_output = BytesIO() # Cria uma instância em memória.
-  HTML(string=template_render).write_pdf(path_output) # Escreve o HTML e salva na instância da memória.
-  path_output.seek(0) # Volta o ponteiro para o início do arquivo.
+    nova_conta = ContaPagar(
+      titulo =titulo,
+      categoria_id = categoria,
+      descricao = descricao,
+      valor = valor,
+      dia_pagamento = dia_pagamento
+    )
+    nova_conta.save()
 
-  # Envia o arquivo para o usuário em PDF.
-  return FileResponse(path_output, filename=f'extrato_{datetime.now().month}-{datetime.now().year}.pdf')
+    messages.add_message(request, constants.SUCCESS, 'Nova conta criada com sucesso!')
+    return redirect('home')
+
+def ver_contas(request):
+  MES_ATUAL = datetime.now().month
+  DIA_ATUAL = datetime.now().day
+
+  pagas = ContaPaga.objects.filter(dia_pagamento__month=MES_ATUAL).values('conta')  # A função "values('conta')" trás o valor do campo passado como parametro.
+  contas = ContaPagar.objects.all().order_by('dia_pagamento')
+  contas_pagas = contas.filter(id__in=pagas)
+  contas_vencidas = contas.filter(dia_pagamento__lt=DIA_ATUAL).exclude(id__in=pagas)  # Filtra pelas contas que tem o dia de pagamento menor que o dia atual e que seu "id" não esteja em "contas_pagas".
+  contas_proximas_vencimento = contas.filter(dia_pagamento__gt=DIA_ATUAL).filter(dia_pagamento__lte=DIA_ATUAL+5).exclude(id__in=pagas)
+  contas_restantes = contas.exclude(id__in=pagas).exclude(id__in=contas_vencidas).exclude(id__in=contas_proximas_vencimento)
+
+
+  return render(request, 'ver_contas.html', {
+    'contas_pagas': contas_pagas,
+    'contas_vencidas': contas_vencidas,
+    'contas_proximas_vencimento': contas_proximas_vencimento,
+    'contas_restantes': contas_restantes
+    })
+
+def pagar_contas(request, conta_id):
+  conta_paga = ContaPaga(
+    conta_id = conta_id,
+    dia_pagamento = datetime.now()
+  )
+  conta_paga.save()
+
+  return redirect('ver_contas')
