@@ -3,8 +3,13 @@ from django.db import models
 from .utils import calcular_total
 
 class Categoria(models.Model):
+  choice_tipo = (
+    ('E', 'ENTRADA'), 
+    ('S', 'SAIDA')
+  )
+
   categoria = models.CharField(max_length=50)
-  essencial = models.BooleanField(default=False)
+  tipo = models.CharField(max_length=1, choices=choice_tipo)
   valor_planejamento = models.FloatField(default=0)
 
   def __str__(self):

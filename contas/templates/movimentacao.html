@@ -21,11 +21,11 @@
     </div>
     <br>
     
-    <span class="fonte-destaque">Adicionar entradas/saídas</span>
+    <span class="fonte-destaque">{% if tipo_movimentacao == 'E' %}Adicionar Entrada{%else%}Adicionar Saída{% endif %}</span>
     <div class="row">
 
       <div class="col-md-7">
-        <form action="{% url 'movimentacao' %}" method="POST">{% csrf_token %}
+        <form action="{% url 'movimentacao' tipo_movimentacao %}" method="POST">{% csrf_token %}
           <div class="row">
             <div class="col-md">
               <label>Valor</label>
@@ -37,7 +37,7 @@
                 <select name="categoria" class="form-select">
                   <option value="">Selecione uma categoria</option>
                   {% for categoria in categorias %}
-                    <option value="{{categoria.id}}">{{categoria}}</option> 
+                    <option value="{{categoria.id}}">{{categoria}}</option>
                   {% endfor %}
                 </select>
                 <a href="{% url 'gerenciar' %}">Criar categoria</a>
@@ -63,8 +63,6 @@
               <a href="{% url 'gerenciar' %}">Criar conta</a>
             </div>
           </div>
-          <input type="radio" name="tipo" value="E"> <label class="positivo">Entrada&nbsp&nbsp</label>
-          <input type="radio" name="tipo" value="S"> <label class="negativo">Saída</label>
           <br>
           <br>
           <input type="submit" style="width:40%;" class="botao-principal">

@@ -25,15 +25,13 @@
         </tr>
 
         {% for categoria in categorias %}
-          {% comment %} {% for saida in categoria.saidas %} {% endcomment %}
-            {% comment %} {% if saida.tipo == 'S' %} {% endcomment %}
-              <tr class="linha">
-                <td>{{categoria}}</td>
-                <td><input type="text" id="valor-categoria-{{categoria.id}}" class="form-control" value="{{categoria.valor_planejamento|floatformat:2}}"></td>
-                <td><button onclick="modificar_valor_planejamento({{categoria.id}})" style="width: 100%;" class="botao-secundario">Alterar</button></td>         
-              </tr>
-            {% comment %} {% endif %} {% endcomment %}
-          {% comment %} {% endfor %} {% endcomment %}
+          {% if categoria.tipo == 'S' %}
+            <tr class="linha">
+              <td>{{categoria}}</td>
+              <td><input type="text" id="valor-categoria-{{categoria.id}}" class="form-control" value="{{categoria.valor_planejamento|floatformat:2}}"></td>
+              <td><button onclick="modificar_valor_planejamento({{categoria.id}})" style="width: 100%;" class="botao-secundario">Alterar</button></td>         
+            </tr>
+          {% endif %}
         {% endfor %}
       </table>
 

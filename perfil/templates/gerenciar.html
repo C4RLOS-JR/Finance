@@ -25,7 +25,7 @@
     <div class="row">
 
       <!--Suas Contas-->
-      <div class="col-md-5">
+      <div class="col-md-6">
         <p class="fonte-destaque">Suas contas</p>
         <hr>
 
@@ -45,7 +45,7 @@
         <span class="total-conta font-destaque valor-total {% if valor_total > 0 %} positivo {% elif valor_total < 0 %} negativo {% endif %}">R$ {{valor_total|floatformat:2}}</span>
       </div>
 
-      <div class="col-md-2"></div>
+      <div class="col-md-1"></div>
 
       <!--Nova Conta-->
       <div class="col-md-5 card-nova">
@@ -86,30 +86,60 @@
     <div class="row">
 
       <!--Suas Categorias-->
-      <div class="col-md-5">
-        <span class="fonte-destaque">Suas categoria</span>
+      <div class="col-md-6">
+        <span class="fonte-destaque">Suas categorias</span>
         <br>
         <br>
 
-        <div class="itens-categoria">
-          <span>Categoria</span>
-          <span class="total-categoria">Essencial</span>
-        </div>
-        <hr>
+        <div class="row">
+          <div class="col-md-6">
 
-        <div class="contas">
-          {% for categoria in categorias %}
-            <div class="lista-contas-main">
-              <span>{{categoria}}</span>
-              
-              <span class="total-conta img"><a href="{% url 'update_categoria' categoria.id %}"><img src="{% if categoria.essencial %} {% static 'perfil/img/essencial.png' %} {% else %} {% static 'perfil/img/nao_essencial.png' %} {% endif %}"></a></span>
+            <div class="itens-categoria positivo">
+              <span>Entradas</span>
             </div>
             <hr>
-          {% endfor %}
+            
+            <div class="contas">
+              {% for categoria in categorias %}
+              {% if categoria.tipo == 'E' %}
+              <div class="lista-contas-main">
+                <span>{{categoria}}</span>
+                
+                {% comment %} <span class="total-conta img"><a href="{% url 'update_categoria' categoria.id %}"><img src="{% if categoria.essencial %} {% static 'perfil/img/essencial.png' %} {% else %} {% static 'perfil/img/nao_essencial.png' %} {% endif %}"></a></span> {% endcomment %}
+              </div>
+              {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+          <br>
+          <br>
+
+          <div class="col-md-6">
+
+            <div class="itens-categoria negativo">
+              <span>Saídas</span>
+            </div>
+            <hr>
+            
+            <div class="contas">
+              {% for categoria in categorias %}
+              {% if categoria.tipo == 'S' %}
+              <div class="lista-contas-main">
+                <span>{{categoria}}</span>
+                
+                {% comment %} <span class="total-conta img"><a href="{% url 'update_categoria' categoria.id %}"><img src="{% if categoria.essencial %} {% static 'perfil/img/essencial.png' %} {% else %} {% static 'perfil/img/nao_essencial.png' %} {% endif %}"></a></span> {% endcomment %}
+              </div>
+              {% endif %}
+              {% endfor %}
+            </div>
+          </div>
         </div>
+          
       </div>
 
-      <div class="col-md-2"></div>
+
+      <div class="col-md-1"></div>
 
       <!--Nova Categoria-->
       <div class="col-md-5 card-nova">
@@ -120,7 +150,11 @@
           <input type="text" name="categoria" class="form-control">
           <br>
 
-          <input type="checkbox" name="essencial" value="essencial"><label>&nbspEssencial</label>
+          <label>Tipo</label>
+          <br>
+          <input type="radio" name="tipo" value="E"><label>&nbspEntrada</label>
+          <input type="radio" name="tipo" value="S"><label>&nbspSaída</label>
+
           <br>
           <br>
           <input style="width: 100%" type="submit" class="botao-principal" value="Adicionar Categoria">
@@ -130,9 +164,17 @@
   </div>
 
   <script>
+
     function confirmarExcluir() {
         return confirm('Você tem certeza que deseja excluir essa conta?');
     }
+
+    function selecionado(checkbox, otherCheckboxId) {
+      if (checkbox.checked) {
+        document.getElementById(otherCheckboxId).checked = false;
+      }
+    }
+
   </script>
 
 {% endblock %}

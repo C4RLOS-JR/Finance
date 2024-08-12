@@ -92,7 +92,7 @@ def excluir_banco(request, conta_id):
 
 def cadastrar_categoria(request):
   categoria = request.POST.get('categoria')
-  essencial = bool(request.POST.get('essencial'))
+  tipo = request.POST.get('tipo')
 
   if len(categoria.strip()) == 0:
     messages.add_message(request, constants.ERROR, 'O campo categoria não pode ficar em branco!')
@@ -101,7 +101,7 @@ def cadastrar_categoria(request):
   try:
     nova_categoria = Categoria(
       categoria = categoria,
-      essencial = essencial
+      tipo = tipo
     )
     nova_categoria.save()
 

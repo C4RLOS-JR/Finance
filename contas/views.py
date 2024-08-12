@@ -6,11 +6,15 @@ from .models import Movimentacao
 from django.contrib.messages import constants
 from django.contrib import messages
 
-def movimentacao(request):
+def movimentacao(request, tipo_movimentacao):
   if request.method == 'GET':
     contas = Conta.objects.all()
-    categorias = Categoria.objects.all()
-    return render(request, 'movimentacao.html', {'contas': contas, 'categorias': categorias})
+    categorias = Categoria.objects.filter(tipo=tipo_movimentacao)
+
+    return render(request, 'movimentacao.html', {
+      'contas': contas,
+      'categorias': categorias,
+      'tipo_movimentacao': tipo_movimentacao})
   
   if request.method == 'POST':
     valor = request.POST.get('valor')
@@ -18,12 +22,11 @@ def movimentacao(request):
     descricao = request.POST.get('descricao')
     data = request.POST.get('data')
     id_conta = request.POST.get('id_conta')
-    tipo = request.POST.get('tipo')
     valor = valor.replace(',', '.')
 
-    if (len(valor.strip())==0) or (len(descricao.strip())==0) or (len(data)==0) or (len(tipo)==0):
+    if (len(valor.strip())==0) or (len(descricao.strip())==0) or (len(data)==0):
       messages.add_message(request, constants.ERROR, 'Preencha todos os campos!')
-      return redirect('movimentacao')
+      return redirect(f'../movimentacao/{tipo_movimentacao}')
     
     # if not valor.isnumeric():
     #   messages.add_message(request, constants.ERROR, 'O valor precisa ser um número!')
@@ -38,23 +41,23 @@ def movimentacao(request):
         descricao = descricao,
         data = data,
         conta_id = id_conta,
-        tipo = tipo)
+        tipo = tipo_movimentacao)
       novo_valor.save()
 
-      if tipo == 'S':
+      if tipo_movimentacao == 'S':
         if conta.valor - float(valor) < 0:
           messages.add_message(request, constants.ERROR, 'Essa conta não tem saldo suficiente para essa despesa...escolha outra conta!')
-          return redirect('movimentacao')
+          return redirect(f'../movimentacao/{tipo_movimentacao}')
         conta.valor -= float(valor)
         messages.add_message(request, constants.SUCCESS, 'Saída cadastrada com sucesso!')
       else:
         conta.valor += float(valor)
         messages.add_message(request, constants.SUCCESS, 'Entrada cadastrada com sucesso!')
       conta.save()
-      return redirect('movimentacao')
+      return redirect(f'../movimentacao/{tipo_movimentacao}')
     except:
       messages.add_message(request, constants.ERROR, 'Algo deu errado...tente novamente ou fale com um administrador!')
-      return redirect('movimentacao')
+      return redirect(f'../movimentacao/{tipo_movimentacao}')
     
 def definir_contas(request):
   categorias = Categoria.objects.all()

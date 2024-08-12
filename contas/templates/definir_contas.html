@@ -36,9 +36,12 @@
                 <select name="categoria" class="form-select">
                   <option value="">Escolha uma categoria</option>
                   {% for categoria in categorias %}
-                    <option value="{{categoria.id}}">{{categoria}}</option>
+                    {% if categoria.tipo == 'S' %}
+                      <option value="{{categoria.id}}">{{categoria}}</option>
+                    {% endif %}
                   {% endfor %}
                 </select>
+                <a href="{% url 'gerenciar' %}">Criar categoria</a>
               </div>
             </div>
             <br>
