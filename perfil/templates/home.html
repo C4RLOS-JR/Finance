@@ -80,11 +80,11 @@
       </div>
     </div>
     <br>
-    <br>
     
     <div class="row">
 
       <div class="col-md-4">
+
         <!-- Suas contas -->
         <div class="card">
           <span class="fonte-destaque destaque">Suas contas</span>
@@ -108,6 +108,57 @@
           <a href="{% url 'gerenciar' %}" class="botao-principal">Gerenciar contas</a>
         </div>
         <br>
+
+        <!-- Contas mensais -->
+        <div class="card">
+          <span class="fonte-destaque destaque">Contas mensais</span>
+          <hr class="hr-borda">
+          
+          <span class="fonte-destaque negativo">Vencidas</span>
+          <span class="fonte-light">0 contas vencidas</span>
+          <br>
+          <span class="fonte-destaque atencao">Próximas do vencimento</span>
+          <span class="fonte-light">3 contas próximas do vencimento</span>
+          <span class="fonte-light">0 vence hoje</span>
+          
+          <hr class="hr-borda">
+
+          <a href="{% url 'ver_contas' %}" class="botao-principal">Gerenciar contas</a>
+          <br>
+          <a href="{% url 'definir_contas' %}" class="botao-principal">Adicionar contas</a>
+        </div>
+
+      </div>
+
+      <div class="col-md-8">
+
+        <!-- Receita/Despesa -->
+        <div class="card">
+          <div class="row">
+
+            <div class="col-md">
+              <div class="receita">
+                <span class="fonte-destaque">Receita mensal</span>
+                <br>
+                <span class="font-light">R$ {{total_entradas|floatformat:2}}</span>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="despesa">
+                <span class="fonte-destaque">Despesa mensal</span>
+                <br>
+                <span class="font-light">R$ {{total_saidas|floatformat:2}}</span>
+              </div>
+            </div>
+
+          </div>
+          <hr class="hr-borda">
+          <span class="fonte-destaque">Total livre</span>
+          <span class="font-light">R$ 0.000,00</span>
+          
+        </div>
+        <br>
+
         <!-- Planejamento -->
         <div class="card">
           <div>
@@ -165,75 +216,9 @@
           
           <a href="{% url 'definir_planejamento' %}" class="botao-principal">Definir planejamento</a>
         </div>
-      </div>
-
-      <div class="col-md-8">
-        <!-- Receita/Despesa -->
-        <div class="card">
-          <div class="row">
-            <div class="col-md">
-              <div class="receita">
-                <span class="fonte-destaque">Receita mensal</span>
-                <br>
-                <span class="font-light">R$ {{total_entradas|floatformat:2}}</span>
-              </div>
-            </div>
-            <div class="col-md">
-              <div class="despesa">
-                <span class="fonte-destaque">Despesa mensal</span>
-                <br>
-                <span class="font-light">R$ {{total_saidas|floatformat:2}}</span>
-              </div>
-            </div>
-
-          </div>
-          <hr class="hr-borda">
-          <span class="fonte-destaque">Total livre</span>
-          <span class="font-light">R$ 0.000,00</span>
-          <hr class="hr-borda">
-          <a href="{% url 'definir_contas' %}" class="botao-principal">Gerenciar dados mensais</a>
-        </div>
-        <br>
-        <!-- Gerenciar contas -->
-        <div class="card">
-          <span class="fonte-destaque destaque">Gerenciar contas</span>
-          <hr class="hr-borda">
-          
-          <span class="fonte-destaque negativo">Vencidas</span>
-          <span class="fonte-light">0 contas vencidas</span>
-          <br>
-          <span class="fonte-destaque atencao">Próximas do vencimento</span>
-          <span class="fonte-light">3 contas próximas do vencimento</span>
-          <span class="fonte-light">0 vence hoje</span>
-          
-          <hr class="hr-borda">
-          
-          <a href="{% url 'ver_contas' %}" class="botao-principal">Ver mais</a>
-          
-        </div>
-        <br>
-        <!-- Equilíbrio financeiro -->
-        <div class="card">
-          <span class="fonte-destaque destaque">Equilibrio financeiro</span>
-          <hr class="hr-borda">
-  
-          <p>Gastos essenciais</p>
-          <div class="progress">
-              <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 20%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-          <br>
-          <p>Gastos não essenciais</p>
-          <div class="progress">
-              <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 40%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-          </div>
-  
-          <hr class="hr-borda">
-          <a href="#" class="botao-principal">Alterar categorias essenciais</a>
-  
-        </div>
+        
       </div>
     </div>
-    <br>
     <br>
   </div>
 {% endblock %}
