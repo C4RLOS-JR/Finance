@@ -64,9 +64,15 @@
                     <div class="col-md text-center">
                       {{conta.titulo}}
                     </div>
-                    <div class="col-md text-center">
-                      Vai vencer no dia {{conta.dia_pagamento}}
-                    </div>
+                    {% if conta.dia_pagamento == hoje %}
+                      <div class="col-md text-center">
+                        Vence hoje
+                      </div>
+                    {% else %}
+                      <div class="col-md text-center">
+                        Vai vencer no dia {{conta.dia_pagamento}}
+                      </div>
+                    {% endif %}
                     <div class="col-md text-center">
                       <a href="{% url 'pagar_contas' conta.id %}" onclick="return confirmarPagamento();" class="botao-principal">Pagar</a>
                     </div> 

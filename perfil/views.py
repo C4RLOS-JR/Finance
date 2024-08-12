@@ -10,8 +10,9 @@ from datetime import datetime
 def home(request):
   contas = Conta.objects.all()
   categorias = Categoria.objects.all()
-  saidas = Movimentacao.objects.filter(data__month=datetime.now().month).filter(tipo='S')
-  entradas = Movimentacao.objects.filter(data__month=datetime.now().month).filter(tipo='E')
+  movimentacao = Movimentacao.objects.filter(data__month=datetime.now().month)
+  saidas = movimentacao.filter(tipo='S')
+  entradas = movimentacao.filter(tipo='E')
   total_saidas = calcular_total(saidas, 'valor')
   total_entradas = calcular_total(entradas, 'valor')
   valor_total_contas = calcular_total(contas, 'valor')
@@ -117,3 +118,17 @@ def update_categoria(request, categoria_id):
   categoria.save()
 
   return redirect('gerenciar')
+
+def dashboard(request):
+  dados = {}
+
+  categorias = Categoria.objects.all()
+  for categoria in categorias:
+    total = 0
+    valores = Movimentacao.objects.filter(categoria=categoria)
+    for gasto in valores:
+      total += gasto.valor
+    
+    dados[categoria.categoria] = total
+
+  return render(request, 'dashboard.html', {'labels': list(dados.keys()), 'values': list(dados.values())})

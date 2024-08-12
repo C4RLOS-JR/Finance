@@ -92,7 +92,7 @@ def ver_contas(request):
   contas = ContaPagar.objects.all().order_by('dia_pagamento')
   contas_pagas = contas.filter(id__in=pagas)
   contas_vencidas = contas.filter(dia_pagamento__lt=DIA_ATUAL).exclude(id__in=pagas)  # Filtra pelas contas que tem o dia de pagamento menor que o dia atual e que seu "id" não esteja em "contas_pagas".
-  contas_proximas_vencimento = contas.filter(dia_pagamento__gt=DIA_ATUAL).filter(dia_pagamento__lte=DIA_ATUAL+5).exclude(id__in=pagas)
+  contas_proximas_vencimento = contas.filter(dia_pagamento__gte=DIA_ATUAL).filter(dia_pagamento__lte=DIA_ATUAL+5).exclude(id__in=pagas)
   contas_restantes = contas.exclude(id__in=pagas).exclude(id__in=contas_vencidas).exclude(id__in=contas_proximas_vencimento)
 
 
@@ -100,10 +100,13 @@ def ver_contas(request):
     'contas_pagas': contas_pagas,
     'contas_vencidas': contas_vencidas,
     'contas_proximas_vencimento': contas_proximas_vencimento,
-    'contas_restantes': contas_restantes
+    'contas_restantes': contas_restantes,
+    'hoje': DIA_ATUAL
     })
 
 def pagar_contas(request, conta_id):
+
+  
   conta_paga = ContaPaga(
     conta_id = conta_id,
     dia_pagamento = datetime.now()
