@@ -40,7 +40,8 @@ class ContaPagar(models.Model):
 class ContaPaga(models.Model):
   conta = models.ForeignKey(ContaPagar, on_delete=models.DO_NOTHING)
   valor = models.FloatField(default=0)
-  dia_pagamento = models.DateField()
+  pago_dia = models.DateField()
+  conta_pagamento = models.ForeignKey(Conta, on_delete=models.DO_NOTHING)
 
   def __str__(self):
     return self.conta.titulo
