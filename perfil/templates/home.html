@@ -4,7 +4,7 @@
 {% block 'titulo' %}Página inicial{% endblock  %}
 
 {% block 'head' %}
-  <link rel="stylesheet" href="{% static 'perfil/css/home.css' %}">
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock  %}
 
 {% block 'body' %}
@@ -26,7 +26,7 @@
           <div class="card">
             <div class="row">
               <div class="col-md">
-                <img class="icones" src="{% static 'perfil/img/entradas.png' %}">
+                <img class="icones" src="{% static 'img/perfil/entradas.png' %}">
               </div>
               <div class="col-md-8">
                 <span class="fonte-destaque">Entrada</span>
@@ -41,7 +41,7 @@
           <div class="card">
             <div class="row">
               <div class="col-md">
-                <img class="icones" src="{% static 'perfil/img/saidas.png' %}">
+                <img class="icones" src="{% static 'img/perfil/saidas.png' %}">
               </div>
               <div class="col-md-8">
                 <span class="fonte-destaque">Saída</span>
@@ -55,7 +55,7 @@
           <div class="card">
             <div class="row">
               <div class="col-md">
-                <img class="icones" src="{% static 'perfil/img/transferencia.png' %}">
+                <img class="icones" src="{% static 'img/perfil/transferencia.png' %}">
               </div>
               <div class="col-md-8">
                 <span class="fonte-destaque">Tranferência</span>
@@ -69,7 +69,7 @@
           <div class="card">
             <div class="row">
               <div class="col-md">
-                <img class="icones" src="{% static 'perfil/img/extrato.png' %}">
+                <img class="icones" src="{% static 'img/perfil/extrato.png' %}">
               </div>
               <div class="col-md-8">
                 <span class="fonte-destaque">Extrato</span>
@@ -123,7 +123,7 @@
           
           <hr class="hr-borda">
 
-          <a href="{% url 'ver_contas' %}" class="botao-principal">Gerenciar contas</a>
+          <a href="{% url 'ver_contas' %}" class="botao-principal">Pagar contas</a>
           <br>
           <a href="{% url 'definir_contas' %}" class="botao-principal">Adicionar contas</a>
         </div>

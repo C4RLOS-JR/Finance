@@ -1,0 +1,122 @@
+{% extends 'bases/base.html' %}
+{% load static %}
+
+{% block 'titulo' %}Contas mensais{% endblock  %}
+
+{% block 'head' %}
+    <link href="{% static 'css/home.css' %}" rel="stylesheet">
+    <link href="{% static 'css/extrato.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block 'body' %}
+
+    <div class="container">
+
+      <br>
+       <!--Mensagens-->
+      <div class="row messages">
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert {{message.tags}}" role="alert">{{message}}</div>
+          {% endfor %}
+        {% endif %}
+      </div>
+      <br>
+
+      <span class="fonte-destaque">Pagar conta</span>
+      <br>
+      <br>
+      <div class="row">
+
+        <div class="col-md-7">
+          <form action="{% url 'pagar_contas' conta_id %}" method="POST">{% csrf_token %}
+            <div class="row">
+              <div class="col-md">
+                <label>Título</label>
+                <h3>{{pagar_conta.titulo}}</h3>
+              </div>
+
+              <div class="col-md">
+                <label>Categoria</label>
+                <h3>{{pagar_conta.categoria}}</h3>
+              </div>
+            </div>
+            <br>
+
+            <div class="row">
+              <div class="col-md">
+                <label>Vencimento</label>
+                <h3>{{pagar_conta.dia_pagamento}}</h3>
+              </div>
+              
+              <div class="col-md">
+                <label>Descrição</label>
+                {% if pagar_conta.descricao %}
+                  <h3>{{pagar_conta.descricao}}</h3>
+                {% else %}
+                  <h3>Conta mensal</h3>
+                {% endif %}
+              </div>
+            </div>
+            <br>
+
+            <div class="row">
+              <div class="col-md">
+                <label>Valor</label>  
+                {% if pagar_conta.valor %}
+                  <h3>{{pagar_conta.valor}}</h3>
+                {% else %}
+                  <h3>Defina em valor à pagar</h3>
+                {% endif %}
+              </div>
+
+              <div class="col-md">
+                <label>Data do Pagamento</label>
+                <input type="date" id="data" name="data" class="form-control">
+              </div>
+            </div>
+            <br>
+
+            <div class="row">
+              <div class="col-md">
+                <label>Valor à pagar</label>  
+                <input type="number" name="valor" class="form-control" step="0.01" value="{{pagar_conta.valor|floatformat:2}}">
+              </div>
+
+              <div class="col-md">
+                <label>Pagar com a conta</label>
+                <select name="conta_pagamento_id" class="form-select">
+                  <option value="">Selecione uma conta para pagamento</option>
+                  {% for conta in contas %}
+                    <option value="{{conta.id}}">{{conta}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <br>
+            <br>
+
+            <div class="row">
+              <div class="col-md">
+                <input type="submit" style="width: 100%;" class="botao-principal" value="Pagar">
+              </div>
+
+              <div class="col-md">
+                <a style="width: 100%;" class="botao-secundario" href="{% url 'ver_contas' %}">Cancelar</a>
+              </div>
+            </div>
+            
+            
+
+          </form>
+        </div>
+
+        <div class="col-md-8">
+        </div>
+
+      </div>
+  </div>
+
+  <script src="{% static 'js/movimentacao.js' %}"></script>
+
+{% endblock %}

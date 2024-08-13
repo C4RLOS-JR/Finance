@@ -4,8 +4,7 @@
 {% block 'titulo' %}Gerenciar contas{% endblock  %}
 
 {% block 'head' %}
-  <link href="{% static 'perfil/css/home.css' %}" rel="stylesheet">
-  <link href="{% static 'perfil/css/gerenciar.css' %}" rel="stylesheet">
+  <link href="{% static 'css/home.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block 'body' %}
@@ -34,7 +33,7 @@
 
             <div class="lista-contas-main">
               <span><img class="icone-banco" src="{{conta.icone.url}}">&nbsp&nbsp{{conta.nome}}</span>
-              <span class="total-conta {% if conta.valor > 0 %} positivo {% elif conta.valor < 0 %} negativo {% endif %}">R$ {{conta.valor|floatformat:2}}&nbsp&nbsp&nbsp <a href="{% url 'excluir_banco' conta.id %}" onclick="return confirmarExcluir();"><img src="{% static 'perfil/img/delete.png' %}"></a></span>
+              <span class="total-conta {% if conta.valor > 0 %} positivo {% elif conta.valor < 0 %} negativo {% endif %}">R$ {{conta.valor|floatformat:2}}&nbsp&nbsp&nbsp <a href="{% url 'excluir_banco' conta.id %}" onclick="return confirmarExcluir();"><img src="{% static 'img/perfil/delete.png' %}"></a></span>
             </div>
             
           </div> 
@@ -163,18 +162,6 @@
     </div>
   </div>
 
-  <script>
-
-    function confirmarExcluir() {
-        return confirm('Você tem certeza que deseja excluir essa conta?');
-    }
-
-    function selecionado(checkbox, otherCheckboxId) {
-      if (checkbox.checked) {
-        document.getElementById(otherCheckboxId).checked = false;
-      }
-    }
-
-  </script>
+  <script src="{% static 'js/gerenciar.js' %}"></script>
 
 {% endblock %}

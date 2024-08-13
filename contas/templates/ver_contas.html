@@ -4,7 +4,7 @@
 {% block 'titulo' %}Ver contas{% endblock  %}
 
 {% block 'head' %}
-    <link href="{% static 'perfil/css/home.css' %}" rel="stylesheet">
+    <link href="{% static 'css/home.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block 'body' %}
@@ -37,7 +37,7 @@
                       Venceu no dia {{conta.dia_pagamento}}
                     </div>
                     <div class="col-md text-center">
-                      <a href="{% url 'pagar_contas' conta.id %}" onclick="return confirmarPagamento();" class="botao-principal">Pagar</a>
+                      <a href="{% url 'pagar_contas' conta.id %}" class="botao-principal">Pagar</a>
                     </div> 
                   </div>
                 </div>
@@ -74,7 +74,7 @@
                       </div>
                     {% endif %}
                     <div class="col-md text-center">
-                      <a href="{% url 'pagar_contas' conta.id %}" onclick="return confirmarPagamento();" class="botao-principal">Pagar</a>
+                      <a href="{% url 'pagar_contas' conta.id %}" class="botao-principal">Pagar</a>
                     </div> 
                   </div>
                 </div>
@@ -105,7 +105,7 @@
                       Vencimento no dia {{conta.dia_pagamento}}
                     </div>
                     <div class="col-md text-center">
-                      <a href="{% url 'pagar_contas' conta.id %}" onclick="return confirmarPagamento();" class="botao-principal">Antecipar</a>
+                      <a href="{% url 'pagar_contas' conta.id %}" class="botao-principal">Antecipar</a>
                     </div> 
                   </div>
                 </div>
@@ -134,6 +134,9 @@
                     </div>
                     <div class="col-md text-center">
                       Foi paga no dia {{conta.dia_pagamento}}
+                    </div>
+                    <div class="col-md text-center">
+                      Valor pago R$ {{conta.valor}}
                     </div>
                   </div>
                 </div>
@@ -183,13 +186,5 @@
     </div>
     <br>
   </div>
-
-
-  <script>
-    function confirmarPagamento() {
-        return confirm('Você tem certeza que deseja pagar este item?');
-    }
-  </script>
-
 
 {% endblock %}
