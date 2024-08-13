@@ -5,7 +5,8 @@ from .utils import calcular_total
 class Categoria(models.Model):
   choice_tipo = (
     ('E', 'ENTRADA'), 
-    ('S', 'SAIDA')
+    ('S', 'SAIDA'),
+    ('M', 'MENSAL')
   )
 
   categoria = models.CharField(max_length=50)

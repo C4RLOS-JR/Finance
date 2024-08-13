@@ -1,5 +1,7 @@
 from django.db import models
 from perfil.models import Categoria, Conta
+from perfil.utils import calcular_total
+from datetime import datetime
 
 class Movimentacao(models.Model):
   choice_tipo = (
@@ -22,30 +24,24 @@ class Movimentacao(models.Model):
     verbose_name_plural = "Movimentação da conta"
 
 
-class ContaPagar(models.Model):
+class ContasMensais(models.Model):
   titulo = models.CharField(max_length=50)
   categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING)
   descricao = models.TextField(blank=True, null=True)
   valor = models.FloatField(blank=True, null=True)
-  dia_pagamento = models.IntegerField()
+  dia_vencimento = models.DateField()
+  conta_paga = models.BooleanField(default=False)
+  pago_dia = models.DateField(blank=True, null=True)
+  conta_pagamento = models.ForeignKey(Conta, on_delete=models.DO_NOTHING, blank=True, null=True)
 
   def __str__(self):
     return self.titulo
   
   class Meta:
-    verbose_name = "Contas a Pagar"
-    verbose_name_plural = "Contas a Pagar"
+    verbose_name = "Contas Mensais"
+    verbose_name_plural = "Contas Mensais"
+
+  def pagas(self):
+    valores = ContasMensais.objects.filter(categoria__id=self.id).filter(dia_vencimento__month=datetime.now().month).filter(conta_paga=True)
+    return calcular_total(valores, 'valor')
   
-
-class ContaPaga(models.Model):
-  conta = models.ForeignKey(ContaPagar, on_delete=models.DO_NOTHING)
-  valor = models.FloatField(default=0)
-  pago_dia = models.DateField()
-  conta_pagamento = models.ForeignKey(Conta, on_delete=models.DO_NOTHING)
-
-  def __str__(self):
-    return self.conta.titulo
-
-  class Meta:
-    verbose_name = "Contas Pagas"
-    verbose_name_plural = "Contas Pagas"

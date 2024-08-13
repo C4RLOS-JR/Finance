@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.shortcuts import render, redirect
 from perfil.models import Categoria, Conta
-from .models import ContaPagar, ContaPaga
+from .models import ContasMensais
 from .models import Movimentacao
 from django.contrib.messages import constants
 from django.contrib import messages
@@ -69,21 +69,21 @@ def definir_contas(request):
     categoria = request.POST.get('categoria')
     descricao = request.POST.get('descricao')
     valor = request.POST.get('valor')
-    dia_pagamento = request.POST.get('dia_pagamento')
+    dia_vencimento = request.POST.get('dia_vencimento')
 
     if not valor:
       valor = None
 
-    if (len(titulo.strip())==0) and (len(categoria.strip())==0) and (len(valor.strip())==0) and (len(dia_pagamento.strip())==0):
+    if (len(titulo.strip())==0) and (len(categoria.strip())==0) and (len(valor.strip())==0) and (len(dia_vencimento.strip())==0):
       messages.add_message(request, constants.ERROR, 'Preencha todos os campos!')
       return redirect('definir_contas')
 
-    nova_conta = ContaPagar(
+    nova_conta = ContasMensais(
       titulo =titulo,
       categoria_id = categoria,
       descricao = descricao,
       valor = valor,
-      dia_pagamento = dia_pagamento
+      dia_vencimento = dia_vencimento
     )
     nova_conta.save()
 
@@ -94,26 +94,25 @@ def ver_contas(request):
   MES_ATUAL = datetime.now().month
   DIA_ATUAL = datetime.now().day
 
-  pagas = ContaPaga.objects.filter(pago_dia__month=MES_ATUAL).values('conta')  # A função "values('conta')" trás o valor do campo passado como parametro.
-  contas = ContaPagar.objects.all().order_by('dia_pagamento')
-  contas_pagas = contas.filter(id__in=pagas)
-  contas_vencidas = contas.filter(dia_pagamento__lt=DIA_ATUAL).exclude(id__in=pagas)  # Filtra pelas contas que tem o dia de pagamento menor que o dia atual e que seu "id" não esteja em "contas_pagas".
-  contas_proximas_vencimento = contas.filter(dia_pagamento__gte=DIA_ATUAL).filter(dia_pagamento__lte=DIA_ATUAL+5).exclude(id__in=pagas)
-  contas_restantes = contas.exclude(id__in=pagas).exclude(id__in=contas_vencidas).exclude(id__in=contas_proximas_vencimento)
+  DATA_ATUAL = datetime.now()
 
-  for paga in pagas:
-    print(paga)
+  # pagas = ContaPaga.objects.filter(pago_dia__month=MES_ATUAL).values('conta')  # A função "values('conta')" trás o valor do campo passado como parametro.
+  contas = ContasMensais.objects.all().order_by('dia_vencimento')
+  contas_pagas = contas.filter(conta_paga=True)
+  contas_vencidas = contas.filter(dia_vencimento__lt=DATA_ATUAL).exclude(id__in=contas_pagas)  # Filtra pelas contas que tem o dia de pagamento menor que o dia atual e que seu "id" não esteja em "contas_pagas".
+  contas_proximas_vencimento = contas.filter(dia_vencimento__gte=DATA_ATUAL).filter(dia_vencimento__day__lte=DIA_ATUAL+5).exclude(id__in=contas_pagas)
+  contas_restantes = contas.exclude(id__in=contas_pagas).exclude(id__in=contas_vencidas).exclude(id__in=contas_proximas_vencimento)
 
   return render(request, 'ver_contas.html', {
     'contas_pagas': contas_pagas,
     'contas_vencidas': contas_vencidas,
     'contas_proximas_vencimento': contas_proximas_vencimento,
     'contas_restantes': contas_restantes,
-    'hoje': DIA_ATUAL
+    'hoje': DATA_ATUAL
     })
 
 def pagar_contas(request, conta_id):
-  pagar_conta = ContaPagar.objects.get(id=conta_id)
+  pagar_conta = ContasMensais.objects.get(id=conta_id)
   contas = Conta.objects.all()
   if request.method == 'GET':
     return render(request, 'pagar_conta.html', {
@@ -133,20 +132,15 @@ def pagar_contas(request, conta_id):
   
     conta = Conta.objects.get(id=conta_pagamento_id)
     conta.valor -= float(valor)
+    
     if conta.valor < 0:
       messages.add_message(request, constants.ERROR, f'A conta "{conta.nome}" não tem saldo suficienta para realizar esse pagamento, escolha outra conta!')
       return redirect(f'../pagar_contas/{conta_id}')
     conta.save()
 
-    conta_paga = ContaPaga(
-      conta_id = conta_id,
-      valor = valor,
-      dia_pagamento = dia_pagamento,
-      conta_pagamento_id = conta_pagamento_id
-    )
-    conta_paga.save()
-
-    pagar_conta.valor = valor
+    pagar_conta.conta_paga = True
+    pagar_conta.pago_dia = dia_pagamento
+    pagar_conta.conta_pagamento = conta
     pagar_conta.save()
 
     messages.add_message(request, constants.SUCCESS, f'A conta mensal "{pagar_conta.titulo}" foi paga usando a conta do(a) {conta.nome}!')

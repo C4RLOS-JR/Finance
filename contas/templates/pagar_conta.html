@@ -33,12 +33,12 @@
             <div class="row">
               <div class="col-md">
                 <label>Título</label>
-                <h3>{{pagar_conta.titulo}}</h3>
+                <h4>{{pagar_conta.titulo}}</h4>
               </div>
 
               <div class="col-md">
                 <label>Categoria</label>
-                <h3>{{pagar_conta.categoria}}</h3>
+                <h4>{{pagar_conta.categoria}}</h4>
               </div>
             </div>
             <br>
@@ -46,15 +46,15 @@
             <div class="row">
               <div class="col-md">
                 <label>Vencimento</label>
-                <h3>{{pagar_conta.dia_pagamento}}</h3>
+                <h4>{{pagar_conta.dia_vencimento}}</h4>
               </div>
               
               <div class="col-md">
                 <label>Descrição</label>
                 {% if pagar_conta.descricao %}
-                  <h3>{{pagar_conta.descricao}}</h3>
+                  <h4>{{pagar_conta.descricao}}</h4>
                 {% else %}
-                  <h3>Conta mensal</h3>
+                  <h4>Conta mensal</h4>
                 {% endif %}
               </div>
             </div>
@@ -62,27 +62,34 @@
 
             <div class="row">
               <div class="col-md">
-                <label>Valor</label>  
+                <label>Valor da conta</label>  
                 {% if pagar_conta.valor %}
-                  <h3>{{pagar_conta.valor}}</h3>
+                  <h4>R$ {{pagar_conta.valor|floatformat:2}}</h4>
                 {% else %}
-                  <h3>Defina em valor à pagar</h3>
+                  <h4>Defina em valor à pagar</h4>
                 {% endif %}
               </div>
 
+              <div class="col-md">
+                <label>Valor à pagar</label>
+                {% if pagar_conta.valor %}
+                  <div>
+                    <h4 style="display: inline;">R$ {{pagar_conta.valor|floatformat:2}} &nbsp</h4>
+                    <a href="">Alterar valor</a>
+                  </div>
+                {% else %}
+                  <input type="number" name="valor" class="form-control" step="0.01">
+                {% endif %}
+              </div>
+            </div>
+            <br>
+
+            <div class="row">
               <div class="col-md">
                 <label>Data do Pagamento</label>
                 <input type="date" id="data" name="data" class="form-control">
               </div>
-            </div>
-            <br>
-
-            <div class="row">
-              <div class="col-md">
-                <label>Valor à pagar</label>  
-                <input type="number" name="valor" class="form-control" step="0.01" value="{{pagar_conta.valor|floatformat:2}}">
-              </div>
-
+              
               <div class="col-md">
                 <label>Pagar com a conta</label>
                 <select name="conta_pagamento_id" class="form-select">

@@ -91,43 +91,49 @@
         <br>
 
         <div class="row">
-          <div class="col-md-6">
 
+          <div class="col-md-4">
             <div class="itens-categoria positivo">
               <span>Entradas</span>
             </div>
             <hr>
-            
             <div class="contas">
               {% for categoria in categorias %}
               {% if categoria.tipo == 'E' %}
               <div class="lista-contas-main">
                 <span>{{categoria}}</span>
-                
-                {% comment %} <span class="total-conta img"><a href="{% url 'update_categoria' categoria.id %}"><img src="{% if categoria.essencial %} {% static 'perfil/img/essencial.png' %} {% else %} {% static 'perfil/img/nao_essencial.png' %} {% endif %}"></a></span> {% endcomment %}
               </div>
               {% endif %}
               {% endfor %}
             </div>
           </div>
 
-          <br>
-          <br>
-
-          <div class="col-md-6">
-
+          <div class="col-md-4">
             <div class="itens-categoria negativo">
               <span>Saídas</span>
             </div>
             <hr>
-            
             <div class="contas">
               {% for categoria in categorias %}
               {% if categoria.tipo == 'S' %}
               <div class="lista-contas-main">
                 <span>{{categoria}}</span>
-                
-                {% comment %} <span class="total-conta img"><a href="{% url 'update_categoria' categoria.id %}"><img src="{% if categoria.essencial %} {% static 'perfil/img/essencial.png' %} {% else %} {% static 'perfil/img/nao_essencial.png' %} {% endif %}"></a></span> {% endcomment %}
+              </div>
+              {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="itens-categoria atencao">
+              <span>Mensais</span>
+            </div>
+            <hr>
+            <div class="contas">
+              {% for categoria in categorias %}
+              {% if categoria.tipo == 'M' %}
+              <div class="lista-contas-main">
+                <span>{{categoria}}</span>
               </div>
               {% endif %}
               {% endfor %}
@@ -153,6 +159,7 @@
           <br>
           <input type="radio" name="tipo" value="E"><label>&nbspEntrada</label>
           <input type="radio" name="tipo" value="S"><label>&nbspSaída</label>
+          <input type="radio" name="tipo" value="M"><label>&nbspMensal</label>
 
           <br>
           <br>

@@ -34,7 +34,7 @@
                       {{conta.titulo}}
                     </div>
                     <div class="col-md text-center">
-                      Venceu no dia {{conta.dia_pagamento}}
+                      Venceu no dia {{conta.dia_vencimento}}
                     </div>
                     <div class="col-md text-center">
                       <a href="{% url 'pagar_contas' conta.id %}" class="botao-principal">Pagar</a>
@@ -64,13 +64,13 @@
                     <div class="col-md text-center">
                       {{conta.titulo}}
                     </div>
-                    {% if conta.dia_pagamento == hoje %}
+                    {% if conta.dia_vencimento == hoje %}
                       <div class="col-md text-center">
                         Vence hoje
                       </div>
                     {% else %}
                       <div class="col-md text-center">
-                        Vai vencer no dia {{conta.dia_pagamento}}
+                        Vai vencer no dia {{conta.dia_vencimento}}
                       </div>
                     {% endif %}
                     <div class="col-md text-center">
@@ -102,7 +102,7 @@
                       {{conta.titulo}}
                     </div>
                     <div class="col-md text-center">
-                      Vencimento no dia {{conta.dia_pagamento}}
+                      Vencimento no dia {{conta.dia_vencimento}}
                     </div>
                     <div class="col-md text-center">
                       <a href="{% url 'pagar_contas' conta.id %}" class="botao-principal">Antecipar</a>

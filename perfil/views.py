@@ -1,16 +1,19 @@
+from calendar import month
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .models import Conta, Categoria
-from contas.models import Movimentacao
+from contas.models import Movimentacao, ContasMensais
 from django.contrib.messages import constants
 from django.contrib import messages
 from .utils import calcular_total
-from datetime import datetime
+from datetime import date, datetime
 
 def home(request):
   contas = Conta.objects.all()
   categorias = Categoria.objects.all()
   movimentacao = Movimentacao.objects.filter(data__month=datetime.now().month)
+  contas_mensais = ContasMensais.objects.all()
+  
   saidas = movimentacao.filter(tipo='S')
   entradas = movimentacao.filter(tipo='E')
   total_saidas = calcular_total(saidas, 'valor')
@@ -31,6 +34,7 @@ def home(request):
   return render(request, 'home.html',{
     'contas': contas,
     'categorias': categorias,
+    'contas_mensais': contas_mensais,
     'total_saidas': total_saidas,
     'total_entradas': total_entradas,
     'valor_total_contas': valor_total_contas,

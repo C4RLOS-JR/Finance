@@ -25,7 +25,7 @@
         </tr>
 
         {% for categoria in categorias %}
-          {% if categoria.tipo == 'S' %}
+          {% if categoria.tipo == 'S' or categoria.tipo == 'M' %}
             <tr class="linha">
               <td>{{categoria}}</td>
               <td><input type="text" id="valor-categoria-{{categoria.id}}" class="form-control" value="{{categoria.valor_planejamento|floatformat:2}}"></td>

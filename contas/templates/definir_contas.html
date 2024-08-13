@@ -36,7 +36,7 @@
                 <select name="categoria" class="form-select">
                   <option value="">Escolha uma categoria</option>
                   {% for categoria in categorias %}
-                    {% if categoria.tipo == 'S' %}
+                    {% if categoria.tipo == 'M' %}
                       <option value="{{categoria.id}}">{{categoria}}</option>
                     {% endif %}
                   {% endfor %}
@@ -55,8 +55,8 @@
               </div>
 
               <div class="col-md">
-                <label>Dia de pagamento</label>
-                <input name="dia_pagamento" min="1" max="31" type="number" class="form-control">
+                <label>Dia de vencimento</label>
+                <input type="date" name="dia_vencimento" min="1" max="31" class="form-control">
               </div>
             </div>
             <br>
