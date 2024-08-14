@@ -61,7 +61,16 @@
             </div>
             <br>
             <br>
-            <input type="submit" style="width:40%;" class="botao-principal" value="Adicionar">
+
+            <div class="row">
+              <div class="col-md">
+                <input type="submit" class="botao-principal" value="Adicionar">
+              </div> 
+              
+              <div class="col-md">
+                <a class="botao-secundario" href="{% url 'ver_contas' %}">Cancelar</a>
+              </div>
+            </div>
 
           </form>
         </div>

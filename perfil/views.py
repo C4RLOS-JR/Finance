@@ -7,12 +7,25 @@ from django.contrib import messages
 from .utils import calcular_total
 from datetime import date, datetime
 
+
 def home(request):
+  DATA_ATUAL=datetime.now()
   contas = Conta.objects.all()
   categorias = Categoria.objects.all()
-  movimentacao = Movimentacao.objects.filter(data__month=datetime.now().month)
-  contas_mensais = ContasMensais.objects.filter(dia_vencimento__month=datetime.now().month).filter(conta_paga=True)
+  movimentacao = Movimentacao.objects.filter(data__month=DATA_ATUAL.month)
+  contas_mensais = ContasMensais.objects.filter(dia_vencimento__month=DATA_ATUAL.month).filter(conta_paga=True)
+  contas_mensais_nao_pagas = ContasMensais.objects.filter(dia_vencimento__month=DATA_ATUAL.month).filter(conta_paga=False)
   
+  vencidas = contas_mensais_nao_pagas.filter(dia_vencimento__day__lt=DATA_ATUAL.day).count()
+  proximas_vencimento = contas_mensais_nao_pagas.filter(dia_vencimento__day__gt=DATA_ATUAL.day).filter(dia_vencimento__day__lte=DATA_ATUAL.day+5).count()
+  vence_hoje = contas_mensais_nao_pagas.filter(dia_vencimento=DATA_ATUAL).count()
+
+
+  print(vencidas)
+  print(proximas_vencimento)
+  print(vence_hoje)
+
+
   entradas = movimentacao.filter(tipo='E')
   saidas = movimentacao.filter(tipo='S')
   total_entradas = calcular_total(entradas, 'valor')  # Receita mensal
@@ -21,7 +34,7 @@ def home(request):
   total_despesas = total_saidas + total_mensais  # Despesa mensal
   valor_total_contas = calcular_total(contas, 'valor')  # Saldo total
   valor_total_planejamento = calcular_total(categorias, 'valor_planejamento')
-  
+
   planejamento_total = 0
   percentual_planejamento_total = 0
 
@@ -39,6 +52,9 @@ def home(request):
   return render(request, 'home.html',{
     'contas': contas,
     'categorias': categorias,
+    'vencidas': vencidas,
+    'proximas_vencimento':proximas_vencimento,
+    'vence_hoje': vence_hoje,
     'total_saidas': total_saidas,
     'total_entradas': total_entradas,
     'total_despesas': total_despesas,
@@ -48,6 +64,7 @@ def home(request):
     'percentual_planejamento_total': percentual_planejamento_total
     })
   
+
 def gerenciar(request):
   contas = Conta.objects.all()
   categorias = Categoria.objects.all()
@@ -58,6 +75,7 @@ def gerenciar(request):
     'valor_total': valor_total,
     'categorias': categorias
     })
+
   
 def cadastrar_banco(request):
   nome = request.POST.get('nome')
@@ -89,6 +107,7 @@ def cadastrar_banco(request):
     messages.add_message(request, constants.ERROR, 'Algo deu errado...tente novamente ou fale com um administrador!')
     return redirect('gerenciar')
 
+
 def excluir_banco(request, conta_id):
   conta = Conta.objects.get(id=conta_id)
 
@@ -98,6 +117,7 @@ def excluir_banco(request, conta_id):
 
   messages.add_message(request, constants.SUCCESS, 'Conta excluída com sucesso!')
   return redirect('gerenciar')
+
 
 def cadastrar_categoria(request):
   categoria = request.POST.get('categoria')
@@ -120,13 +140,6 @@ def cadastrar_categoria(request):
     messages.add_message(request, constants.ERROR, 'Algo deu errado...tente novamente ou fale com um administrador!')
     return redirect('gerenciar')
 
-def update_categoria(request, categoria_id):
-  categoria = Categoria.objects.get(id=categoria_id)
-
-  categoria.essencial = not categoria.essencial
-  categoria.save()
-
-  return redirect('gerenciar')
 
 def dashboard(request):
   dados = {}

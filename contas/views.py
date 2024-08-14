@@ -36,21 +36,21 @@ def movimentacao(request, tipo_movimentacao):
           messages.add_message(request, constants.ERROR, 'Essa conta não tem saldo suficiente para essa despesa...escolha outra conta!')
           return redirect(f'../movimentacao/{tipo_movimentacao}')
         conta.valor -= float(valor)
-
-        novo_valor = Movimentacao(
-          valor = valor,
-          categoria_id = categoria,
-          descricao = descricao,
-          data = data,
-          conta_id = id_conta,
-          tipo = tipo_movimentacao)
-        novo_valor.save()
-        
         messages.add_message(request, constants.SUCCESS, 'Saída cadastrada com sucesso!')
       else:
         conta.valor += float(valor)
         messages.add_message(request, constants.SUCCESS, 'Entrada cadastrada com sucesso!')
       conta.save()
+
+      novo_valor = Movimentacao(
+        valor = valor,
+        categoria_id = categoria,
+        descricao = descricao,
+        data = data,
+        conta_id = id_conta,
+        tipo = tipo_movimentacao)
+      novo_valor.save()
+
       return redirect(f'../movimentacao/{tipo_movimentacao}')
     except:
       messages.add_message(request, constants.ERROR, 'Algo deu errado...tente novamente ou fale com um administrador!')

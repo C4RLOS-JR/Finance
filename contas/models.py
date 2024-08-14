@@ -17,7 +17,8 @@ class Movimentacao(models.Model):
   tipo = models.CharField(max_length=1, choices=choice_tipo)
 
   def __str__(self):
-    return self.descricao
+    movimentacao = lambda x: 'Entrada' if x == 'E' else 'Saída'
+    return f'{self.descricao} ({movimentacao(self.tipo)})'
   
   class Meta:
     verbose_name = "Movimentação da conta"

@@ -19,16 +19,3 @@ tr{
     background-color: var(--main-color);
 }
 
-.botao-secundario{
-    background-color: transparent;
-    color: white;
-    text-decoration: none;
-    border: 2px solid var(--contrast-color);
-    padding: 10px;
-    border-radius: 15px;
-    width: 100%;
-    display: block;
-    text-align: center;
-    font-weight: bold;
-    font-size: 15px;
-}
