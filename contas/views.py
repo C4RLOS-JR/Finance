@@ -27,28 +27,25 @@ def movimentacao(request, tipo_movimentacao):
     if (len(valor.strip())==0) or (len(descricao.strip())==0) or (len(data)==0):
       messages.add_message(request, constants.ERROR, 'Preencha todos os campos!')
       return redirect(f'../movimentacao/{tipo_movimentacao}')
-    
-    # if not valor.isnumeric():
-    #   messages.add_message(request, constants.ERROR, 'O valor precisa ser um número!')
-    #   return redirect('movimentacao')
 
     try:
       conta = Conta.objects.get(id=id_conta)
-      
-      novo_valor = Movimentacao(
-        valor = valor,
-        categoria_id = categoria,
-        descricao = descricao,
-        data = data,
-        conta_id = id_conta,
-        tipo = tipo_movimentacao)
-      novo_valor.save()
 
       if tipo_movimentacao == 'S':
         if conta.valor - float(valor) < 0:
           messages.add_message(request, constants.ERROR, 'Essa conta não tem saldo suficiente para essa despesa...escolha outra conta!')
           return redirect(f'../movimentacao/{tipo_movimentacao}')
         conta.valor -= float(valor)
+
+        novo_valor = Movimentacao(
+          valor = valor,
+          categoria_id = categoria,
+          descricao = descricao,
+          data = data,
+          conta_id = id_conta,
+          tipo = tipo_movimentacao)
+        novo_valor.save()
+        
         messages.add_message(request, constants.SUCCESS, 'Saída cadastrada com sucesso!')
       else:
         conta.valor += float(valor)
@@ -91,16 +88,13 @@ def definir_contas(request):
     return redirect('home')
 
 def ver_contas(request):
-  MES_ATUAL = datetime.now().month
-  DIA_ATUAL = datetime.now().day
-
   DATA_ATUAL = datetime.now()
 
   # pagas = ContaPaga.objects.filter(pago_dia__month=MES_ATUAL).values('conta')  # A função "values('conta')" trás o valor do campo passado como parametro.
   contas = ContasMensais.objects.all().order_by('dia_vencimento')
   contas_pagas = contas.filter(conta_paga=True)
   contas_vencidas = contas.filter(dia_vencimento__lt=DATA_ATUAL).exclude(id__in=contas_pagas)  # Filtra pelas contas que tem o dia de pagamento menor que o dia atual e que seu "id" não esteja em "contas_pagas".
-  contas_proximas_vencimento = contas.filter(dia_vencimento__gte=DATA_ATUAL).filter(dia_vencimento__day__lte=DIA_ATUAL+5).exclude(id__in=contas_pagas)
+  contas_proximas_vencimento = contas.filter(dia_vencimento__gte=DATA_ATUAL).filter(dia_vencimento__day__lte=DATA_ATUAL.day+5).exclude(id__in=contas_pagas)
   contas_restantes = contas.exclude(id__in=contas_pagas).exclude(id__in=contas_vencidas).exclude(id__in=contas_proximas_vencimento)
 
   return render(request, 'ver_contas.html', {
@@ -124,9 +118,13 @@ def pagar_contas(request, conta_id):
     conta_pagamento_id = request.POST.get('conta_pagamento_id')
     dia_pagamento = request.POST.get('data')
     valor = request.POST.get('valor')
-    valor = valor.replace(',', '.')
+    
+    if valor:
+      valor = valor.replace(',', '.')
+    else:
+      valor = pagar_conta.valor
 
-    if (len(valor.strip())==0) or (len(dia_pagamento.strip())==0) or (len(conta_pagamento_id.strip())==0):
+    if not valor or (len(dia_pagamento.strip())==0) or (len(conta_pagamento_id.strip())==0):
       messages.add_message(request, constants.ERROR, 'Preencha todos os campos!')
       return redirect(f'../pagar_contas/{conta_id}')
   
@@ -138,6 +136,7 @@ def pagar_contas(request, conta_id):
       return redirect(f'../pagar_contas/{conta_id}')
     conta.save()
 
+    pagar_conta.valor = valor
     pagar_conta.conta_paga = True
     pagar_conta.pago_dia = dia_pagamento
     pagar_conta.conta_pagamento = conta

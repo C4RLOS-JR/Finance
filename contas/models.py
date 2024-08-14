@@ -41,7 +41,3 @@ class ContasMensais(models.Model):
     verbose_name = "Contas Mensais"
     verbose_name_plural = "Contas Mensais"
 
-  def pagas(self):
-    valores = ContasMensais.objects.filter(categoria__id=self.id).filter(dia_vencimento__month=datetime.now().month).filter(conta_paga=True)
-    return calcular_total(valores, 'valor')
-  

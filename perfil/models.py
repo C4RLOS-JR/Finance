@@ -16,19 +16,29 @@ class Categoria(models.Model):
   def __str__(self):
     return self.categoria
   
-  def valor_gasto(self):  # Soma o valor total gasto nas movimentações de saída.
+  def valor_gasto_saida(self):  # Soma o valor total gasto nas movimentações de saída.
     from contas.models import Movimentacao
     valores = Movimentacao.objects.filter(categoria__id=self.id).filter(data__month=datetime.now().month).filter(tipo='S')
     return calcular_total(valores, 'valor') # calcular_total(objetos, campo)
   
-  def saidas(self): # Retorna somente as movimentações de saída.
-    from contas.models import Movimentacao
-    saidas = Movimentacao.objects.filter(categoria__id=self.id).filter(tipo='S')
-    return saidas
+  def valor_gasto_mensal(self): # Soma o valor total gasto nas contas mensais.
+    from contas.models import ContasMensais
+    valores = ContasMensais.objects.filter(categoria__id=self.id).filter(dia_vencimento__month=datetime.now().month).filter(conta_paga=True)
+    return calcular_total(valores, 'valor') # calcular_total(objetos, campo)
   
-  def percentual_gasto(self):
+  # def saidas(self): # Retorna somente as movimentações de saída.
+  #   from contas.models import Movimentacao
+  #   saidas = Movimentacao.objects.filter(categoria__id=self.id).filter(tipo='S')
+  #   return saidas
+  
+  def percentual_gasto_saida(self): # Barra de progresso 'movimentação'.
     if self.valor_planejamento:
-      return int((self.valor_gasto() * 100) / self.valor_planejamento)
+      return int((self.valor_gasto_saida() * 100) / self.valor_planejamento)
+    return 0
+  
+  def percentual_gasto_mensal(self):  # Barra de progresso 'conta mensal'.
+    if self.valor_planejamento:
+      return int((self.valor_gasto_mensal() * 100) / self.valor_planejamento)
     return 0
   
 

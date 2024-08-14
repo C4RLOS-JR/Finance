@@ -1,4 +1,3 @@
-from calendar import month
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .models import Conta, Categoria
@@ -12,35 +11,41 @@ def home(request):
   contas = Conta.objects.all()
   categorias = Categoria.objects.all()
   movimentacao = Movimentacao.objects.filter(data__month=datetime.now().month)
-  contas_mensais = ContasMensais.objects.all()
+  contas_mensais = ContasMensais.objects.filter(dia_vencimento__month=datetime.now().month).filter(conta_paga=True)
   
-  saidas = movimentacao.filter(tipo='S')
   entradas = movimentacao.filter(tipo='E')
-  total_saidas = calcular_total(saidas, 'valor')
-  total_entradas = calcular_total(entradas, 'valor')
-  valor_total_contas = calcular_total(contas, 'valor')
+  saidas = movimentacao.filter(tipo='S')
+  total_entradas = calcular_total(entradas, 'valor')  # Receita mensal
+  total_saidas = calcular_total(saidas, 'valor')  # Despesa mensal
+  total_mensais = calcular_total(contas_mensais, 'valor')  # Despesa mensal
+  total_despesas = total_saidas + total_mensais  # Despesa mensal
+  valor_total_contas = calcular_total(contas, 'valor')  # Saldo total
   valor_total_planejamento = calcular_total(categorias, 'valor_planejamento')
-  planejamento_saidas = 0
-  percentual_planejamento = 0
+  
+  planejamento_total = 0
+  percentual_planejamento_total = 0
 
   for saida in saidas:
-    if saida.categoria.valor_planejamento != 0: # Somar o valor total de saída se o valor de planejamento for diferente de 0.
-      planejamento_saidas += saida.valor
+    if saida.categoria.valor_planejamento != 0: # Acrescenta ao 'planejamento_total' o valor total de saída se o 'valor_planejamento' for diferente de 0.
+      planejamento_total += saida.valor
 
-  if planejamento_saidas and valor_total_planejamento:
-    percentual_planejamento = int((planejamento_saidas * 100) / valor_total_planejamento)
+  for conta_mensal in contas_mensais:
+    if conta_mensal.categoria.valor_planejamento != 0:  # Acrescenta ao 'planejamento_total' o valor total pago das contas mensais se o 'valor_planejamento' for diferente de 0.
+      planejamento_total += conta_mensal.valor
 
+  if planejamento_total and valor_total_planejamento:
+    percentual_planejamento_total = int((planejamento_total * 100) / valor_total_planejamento)
 
   return render(request, 'home.html',{
     'contas': contas,
     'categorias': categorias,
-    'contas_mensais': contas_mensais,
     'total_saidas': total_saidas,
     'total_entradas': total_entradas,
+    'total_despesas': total_despesas,
     'valor_total_contas': valor_total_contas,
-    'valor_total_saidas': planejamento_saidas,
     'valor_total_planejamento': valor_total_planejamento,
-    'percentual_planejamento': percentual_planejamento
+    'planejamento_total': planejamento_total,
+    'percentual_planejamento_total': percentual_planejamento_total
     })
   
 def gerenciar(request):
