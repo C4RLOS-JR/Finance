@@ -22,14 +22,25 @@
     <br>
     
     <span class="fonte-destaque">{% if tipo_movimentacao == 'E' %}Adicionar Entrada{%else%}Adicionar Saída{% endif %}</span>
-    <div class="row">
+    <br>
+    <br>
 
+    <div class="row">
+      
       <div class="col-md-7">
         <form action="{% url 'movimentacao' tipo_movimentacao %}" method="POST">{% csrf_token %}
           <div class="row">
+            <div class="col-md-6">
+              <label>Título</label>
+              <input name="titulo" type="text" class="form-control"></input>
+            </div>
+          </div>
+          <br>
+          <br>
+          <div class="row">
             <div class="col-md">
               <label>Valor</label>
-              <input name="valor" type="text" class="form-control" placeholder="R$">
+              <input name="valor" type="number" step="0.01" class="form-control" placeholder="R$">
             </div>
 
             <div class="col-md">
@@ -40,11 +51,9 @@
                     <option value="{{categoria.id}}">{{categoria}}</option>
                   {% endfor %}
                 </select>
-                <a href="{% url 'gerenciar' %}">Criar categoria</a>
+                <a style="float: right" href="{% url 'gerenciar' %}">Criar categoria</a>
             </div>
           </div>
-          <label>Descrição</label>
-          <textarea name="descricao" class="form-control"></textarea>
           <br>
           <div class="row">
             <div class="col-md">
@@ -60,7 +69,7 @@
                   <option value="{{conta.id}}">{{conta.nome}}</option>
                 {% endfor %}
               </select>
-              <a href="{% url 'gerenciar' %}">Criar conta</a>
+              <a style="float: right" href="{% url 'gerenciar' %}">Criar conta</a>
             </div>
           </div>
           <br>

@@ -51,7 +51,7 @@
         </a>
       </div>
       <div class="col-md-3">
-        <a style="text-decoration: none; color: white;" href="#">
+        <a style="text-decoration: none; color: white;" href="{% url 'transferir' %}">
           <div class="card">
             <div class="row">
               <div class="col-md">
@@ -153,10 +153,6 @@
             </div>
 
           </div>
-          <hr class="hr-borda">
-          <span class="fonte-destaque">Total livre</span>
-          <span class="font-light">R$ 0.000,00</span>
-          
         </div>
         <br>
 
@@ -167,7 +163,7 @@
           </div>
           <br>
 
-          <h5 class="negativo">Contas Mensais</h5>
+          <h5 class="normal">Contas Mensais</h5>
           {% for categoria in categorias %}
             {% if categoria.valor_planejamento != 0 %}
               {% if categoria.tipo == 'M' %}
@@ -194,7 +190,7 @@
           {% endfor %}
           <hr>
 
-          <h5 class="negativo">Movimentações</h5>
+          <h5 class="normal">Movimentações</h5>
           {% for categoria in categorias %}
             {% if categoria.tipo == 'S' %}
               {% if categoria.valor_planejamento != 0 %}

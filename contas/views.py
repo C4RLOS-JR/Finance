@@ -1,10 +1,12 @@
 from datetime import datetime
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from perfil.models import Categoria, Conta
-from .models import ContasMensais
+from .models import ContasMensais, Transferencias
 from .models import Movimentacao
 from django.contrib.messages import constants
 from django.contrib import messages
+
 
 def movimentacao(request, tipo_movimentacao):
   if request.method == 'GET':
@@ -17,14 +19,14 @@ def movimentacao(request, tipo_movimentacao):
       'tipo_movimentacao': tipo_movimentacao})
   
   if request.method == 'POST':
+    titulo = request.POST.get('titulo')
     valor = request.POST.get('valor')
     categoria = request.POST.get('categoria')
-    descricao = request.POST.get('descricao')
     data = request.POST.get('data')
     id_conta = request.POST.get('id_conta')
     valor = valor.replace(',', '.')
 
-    if (len(valor.strip())==0) or (len(descricao.strip())==0) or (len(data)==0):
+    if (len(titulo.strip())==0) or (len(valor.strip())==0) or (len(data)==0):
       messages.add_message(request, constants.ERROR, 'Preencha todos os campos!')
       return redirect(f'../movimentacao/{tipo_movimentacao}')
 
@@ -43,11 +45,11 @@ def movimentacao(request, tipo_movimentacao):
       conta.save()
 
       novo_valor = Movimentacao(
+        titulo = titulo,
         valor = valor,
         categoria_id = categoria,
-        descricao = descricao,
         data = data,
-        conta_id = id_conta,
+        conta_pagamento_id = id_conta,
         tipo = tipo_movimentacao)
       novo_valor.save()
 
@@ -56,6 +58,7 @@ def movimentacao(request, tipo_movimentacao):
       messages.add_message(request, constants.ERROR, 'Algo deu errado...tente novamente ou fale com um administrador!')
       return redirect(f'../movimentacao/{tipo_movimentacao}')
     
+
 def definir_contas(request):
   categorias = Categoria.objects.all()
   if request.method == 'GET':
@@ -63,9 +66,8 @@ def definir_contas(request):
   
   elif request.method == 'POST':
     titulo = request.POST.get('titulo')
-    categoria = request.POST.get('categoria')
-    descricao = request.POST.get('descricao')
     valor = request.POST.get('valor')
+    categoria = request.POST.get('categoria')
     dia_vencimento = request.POST.get('dia_vencimento')
 
     if not valor:
@@ -75,22 +77,25 @@ def definir_contas(request):
       messages.add_message(request, constants.ERROR, 'Preencha todos os campos!')
       return redirect('definir_contas')
 
-    nova_conta = ContasMensais(
-      titulo =titulo,
-      categoria_id = categoria,
-      descricao = descricao,
-      valor = valor,
-      dia_vencimento = dia_vencimento
-    )
-    nova_conta.save()
+    try:
+      nova_conta = ContasMensais(
+        titulo =titulo,
+        valor = valor,
+        categoria_id = categoria,
+        dia_vencimento = dia_vencimento
+      )
+      nova_conta.save()
 
-    messages.add_message(request, constants.SUCCESS, 'Nova conta criada com sucesso!')
-    return redirect('home')
+      messages.add_message(request, constants.SUCCESS, 'Nova conta criada com sucesso!')
+      return redirect('home')
+    except:
+      messages.add_message(request, constants.ERROR, 'Algo deu errado...tente novamente ou fale com um administrador!')
+      return redirect('definir_contas')
+
 
 def ver_contas(request):
   DATA_ATUAL = datetime.now()
 
-  # pagas = ContaPaga.objects.filter(pago_dia__month=MES_ATUAL).values('conta')  # A função "values('conta')" trás o valor do campo passado como parametro.
   contas = ContasMensais.objects.all().order_by('dia_vencimento')
   contas_pagas = contas.filter(conta_paga=True)
   contas_vencidas = contas.filter(dia_vencimento__lt=DATA_ATUAL).exclude(id__in=contas_pagas)  # Filtra pelas contas que tem o dia de pagamento menor que o dia atual e que seu "id" não esteja em "contas_pagas".
@@ -104,6 +109,7 @@ def ver_contas(request):
     'contas_restantes': contas_restantes,
     'hoje': DATA_ATUAL
     })
+
 
 def pagar_contas(request, conta_id):
   pagar_conta = ContasMensais.objects.get(id=conta_id)
@@ -142,5 +148,50 @@ def pagar_contas(request, conta_id):
     pagar_conta.conta_pagamento = conta
     pagar_conta.save()
 
-    messages.add_message(request, constants.SUCCESS, f'A conta mensal "{pagar_conta.titulo}" foi paga usando a conta do(a) {conta.nome}!')
+    messages.add_message(request, constants.SUCCESS, f'A conta mensal "{pagar_conta.titulo}" foi paga usando a conta "{conta.nome}"!')
     return redirect('ver_contas')
+  
+
+def transferir(request):
+  contas = Conta.objects.all()
+
+  if request.method == 'GET':
+    return render(request, 'transferir.html', {'contas': contas})
+  
+  elif request.method == 'POST':
+    id_conta_partida = request.POST.get('id_conta_partida')
+    id_conta_destino = request.POST.get('id_conta_destino')
+    valor = request.POST.get('valor')
+    valor = valor.replace(',', '.')
+    data = request.POST.get('data')
+
+    if id_conta_partida == id_conta_destino:
+      messages.add_message(request, constants.ERROR, 'As contas precisam ser diferentes!')
+      return redirect('transferir')
+
+    if (len(id_conta_partida.strip())==0) or (len(id_conta_destino.strip())==0) or (len(valor.strip())==0):
+      messages.add_message(request, constants.ERROR, 'Preencha todos os campos!')
+      return redirect('transferir')
+    
+    try:
+      transferencia = Transferencias(
+        conta_partida_id = id_conta_partida,
+        conta_destino_id = id_conta_destino,
+        valor = valor,
+        data = data
+      )
+      transferencia.save()
+
+      conta_partida = contas.get(id=id_conta_partida)
+      conta_partida.valor -= float(valor)
+      conta_partida.save()
+
+      conta_destino = contas.get(id=id_conta_destino)
+      conta_destino.valor += float(valor)
+      conta_destino.save()
+
+      messages.add_message(request, constants.SUCCESS, 'Transferencia realizada com sucesso!')
+      return redirect('home')
+    except:
+      messages.add_message(request, constants.ERROR, 'Algo deu errado...tente novamente ou fale com um administrador!')
+      return redirect('transferir')

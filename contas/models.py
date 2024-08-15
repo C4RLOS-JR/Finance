@@ -9,27 +9,26 @@ class Movimentacao(models.Model):
     ('S', 'SAIDA')
   )
 
+  titulo = models.CharField(max_length=50)
   valor = models.FloatField()
   categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING)
-  descricao = models.TextField()
   data = models.DateField()
-  conta = models.ForeignKey(Conta, on_delete=models.DO_NOTHING)
+  conta_pagamento = models.ForeignKey(Conta, on_delete=models.DO_NOTHING)
   tipo = models.CharField(max_length=1, choices=choice_tipo)
 
   def __str__(self):
     movimentacao = lambda x: 'Entrada' if x == 'E' else 'Saída'
-    return f'{self.descricao} ({movimentacao(self.tipo)})'
+    return f'{self.titulo} ({movimentacao(self.tipo)})'
   
   class Meta:
-    verbose_name = "Movimentação da conta"
-    verbose_name_plural = "Movimentação da conta"
+    verbose_name = "Entradas/Saídas"
+    verbose_name_plural = "Entradas/Saídas"
 
 
 class ContasMensais(models.Model):
   titulo = models.CharField(max_length=50)
-  categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING)
-  descricao = models.TextField(blank=True, null=True)
   valor = models.FloatField(blank=True, null=True)
+  categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING)
   dia_vencimento = models.DateField()
   conta_paga = models.BooleanField(default=False)
   pago_dia = models.DateField(blank=True, null=True)
@@ -42,3 +41,16 @@ class ContasMensais(models.Model):
     verbose_name = "Contas Mensais"
     verbose_name_plural = "Contas Mensais"
 
+
+class Transferencias(models.Model):
+  conta_partida = models.ForeignKey(Conta, on_delete=models.DO_NOTHING, related_name='transferencias_partida')
+  conta_destino = models.ForeignKey(Conta, on_delete=models.DO_NOTHING, related_name='transferencias_destino')
+  valor = models.FloatField()
+  data = models.DateField()
+
+  def __str__(self):
+    return f'{self.conta_partida} - {self.data}'
+  
+  class Meta:
+    verbose_name = "Transferências"
+    verbose_name_plural = "Transferências"

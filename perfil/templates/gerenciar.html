@@ -26,7 +26,7 @@
       <!--Suas Contas-->
       <div class="col-md-6">
         <p class="fonte-destaque">Suas contas</p>
-        <hr>
+        <br>
 
         {% for conta in contas %}
           <div class="contas">
@@ -37,8 +37,9 @@
             </div>
             
           </div> 
-          <hr>
+          <br>
         {% endfor %}
+        <hr>
 
         <span class="fonte-destaque">Total:</span>
         <span class="total-conta font-destaque valor-total {% if valor_total > 0 %} positivo {% elif valor_total < 0 %} negativo {% endif %}">R$ {{valor_total|floatformat:2}}</span>

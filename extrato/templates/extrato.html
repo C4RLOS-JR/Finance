@@ -12,10 +12,12 @@
   <br>
   <br>
   <div class='container'>
+    <span class="fonte-destaque">Extrato</span>
+    <br>
+    <br>
+
     <form action="{% url 'ver_extrato' %}" method="GET">
       <div class="row">
-
-        <span class="fonte-destaque">Extrato</span>
 
         <div class="col-md">
           <label>Conta</label>
@@ -61,6 +63,13 @@
           <a href="{% url 'exportar_pdf' %}" class="botao-secundario">Exportar extrato</a>
         </div>
 
+        <div class="col-md-3">
+        </div>
+
+        <div class="col-md-3">
+          <a href="{% url 'extrato_transferencias' %}" class="botao-secundario">Extrato de Transferências</a>
+        </div>
+
       </div>
     </form>
     <br>
@@ -74,7 +83,7 @@
           <th>Categoria</th>
           <th>Data</th>
           <th>Tipo</th>
-          <th>valor</th>
+          <th>Valor</th>
         </tr>
         
         {% for saida in saidas %}

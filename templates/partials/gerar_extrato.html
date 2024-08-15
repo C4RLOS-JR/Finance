@@ -1,29 +1,33 @@
 {% load static %}
 
 <div class="card">
-    
+
+  <label style="font-size: 40px;">Extrato do mês</label>  
+  <label style="float: right">({{data}})</label>
+  <br>
+  <br>
+
   <table>
     <tr>
-      <th>Conta</th>
-      <th>Categoria</th>
-      <th>Data</th>
-      <th>Tipo</th>
-      <th>valor</th>
+      <th style="width: 25%; border-bottom: 1px solid black; text-align: center">Conta</th>
+      <th style="width: 25%; border-bottom: 1px solid black; text-align: center">Categoria</th>
+      <th style="width: 10%; border-bottom: 1px solid black; text-align: center">Data</th>
+      <th style="width: 15%; border-bottom: 1px solid black; text-align: center">Tipo</th>
+      <th style="width: 15%; border-bottom: 1px solid black; text-align: center">Valor</th>
     </tr>
-
-    {% for valor in movimentacao %}
+    {% for saida in saidas %}
       <tr class="linha">
-        <td width="10%">{{valor.conta}}</td>
-        <td>{{valor.categoria}}</td>
-        <td>{{valor.data}}</td>
-        <td>
-          {% if valor.tipo == 'S'%}
-            <img width="30px" src="{% static 'perfil/img/saidas.png' %}">
+        <td>{{saida.conta}}</td>
+        <td>{{saida.categoria}}</td>
+        <td>{{saida.data|date:"d/m/Y"}}</td>
+        <td style="text-align: center">
+          {% if saida.tipo == 'S'%}
+            <span>Saída</span>
           {% else %}
-            <img width="30px" src="{% static 'perfil/img/entradas.png' %}">
+            <span>Entrada</span>
           {% endif %}
         </td>
-        <td>R$ {{valor.valor}}</td>
+        <td style="float: right">R$ {{saida.valor|floatformat:2}}</td>
       </tr>
     {% endfor %}
   </table>

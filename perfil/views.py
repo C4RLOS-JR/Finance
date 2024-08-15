@@ -21,12 +21,6 @@ def home(request):
   vence_hoje = contas_mensais_nao_pagas.filter(dia_vencimento=DATA_ATUAL)
   outras = contas_mensais_nao_pagas.exclude(id__in=vencidas).exclude(id__in=proximas_vencimento).exclude(id__in=vence_hoje)
 
-
-  print(vencidas)
-  print(proximas_vencimento)
-  print(vence_hoje)
-
-
   entradas = movimentacao.filter(tipo='E')
   saidas = movimentacao.filter(tipo='S')
   total_entradas = calcular_total(entradas, 'valor')  # Receita mensal

@@ -1,7 +1,7 @@
 {% extends 'bases/base.html' %}
 {% load static %}
 
-{% block 'titulo' %}Contas mensais{% endblock  %}
+{% block 'titulo' %}Transferência{% endblock  %}
 
 {% block 'head' %}
     <link href="{% static 'css/home.css' %}" rel="stylesheet">
@@ -20,43 +20,48 @@
         {% endif %}
       </div>
       <br>
-      <span class="fonte-destaque">Adicionar contas mensais</span>
+      <span class="fonte-destaque">Transferir entre contas</span>
       <br>
       <br>
       
       <div class="row">
 
         <div class="col-md-7">
-          <form action="{% url 'definir_contas' %}" method="POST">{% csrf_token %}
+          <form action="{% url 'transferir' %}" method="POST">{% csrf_token %}
             <div class="row">
+              
               <div class="col-md">
-                <label>Título</label>
-                <input name="titulo" type="text" class="form-control">
+                <label>Enviar da conta</label>
+                <select name="id_conta_partida" class="form-select">
+                  <option value="">Escolha a conta de partida</option>
+                  {% for conta in contas %}
+                      <option value="{{conta.id}}">{{conta}}</option>
+                  {% endfor %}
+                </select>
               </div>
 
               <div class="col-md">
-                <label>Categoria</label>
-                <select name="categoria" class="form-select">
-                  <option value="">Escolha uma categoria</option>
-                  {% for categoria in categorias %}
-                    {% if categoria.tipo == 'M' %}
-                      <option value="{{categoria.id}}">{{categoria}}</option>
-                    {% endif %}
+                <label>Receber na conta</label>
+                <select name="id_conta_destino" class="form-select">
+                  <option value="">Escolha a conta de destino</option>
+                  {% for conta in contas %}
+                      <option value="{{conta.id}}">{{conta}}</option>
                   {% endfor %}
                 </select>
-                <a style="float: right" href="{% url 'gerenciar' %}">Criar categoria</a>
               </div>
             </div>
             <br>
+            <br>
+
             <div class="row">
               <div class="col-md">
                 <label>Valor</label>  
-                <input type="number" step="0.01" name="valor" class="form-control">
+                <input type="number" step="0.01" name="valor" class="form-control" step="0.01" placeholder="R$">
               </div>
 
               <div class="col-md">
-                <label>Dia de vencimento</label>
-                <input type="date" name="dia_vencimento" min="1" max="31" class="form-control">
+                <label>Dia da transferência</label>
+                <input type="date" name="data" id="data" class="form-control">
               </div>
             </div>
             <br>
@@ -65,7 +70,7 @@
 
             <div class="row">
               <div class="col-md">
-                <input type="submit" class="botao-principal" value="Adicionar">
+                <input type="submit" class="botao-principal" value="Transferir">
               </div> 
               
               <div class="col-md">
@@ -80,7 +85,8 @@
         </div>
 
       </div>
-
   </div>
+
+  <script src="{% static 'js/movimentacao.js' %}"></script>
 
 {% endblock %}

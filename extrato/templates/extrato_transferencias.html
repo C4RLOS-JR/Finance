@@ -1,0 +1,42 @@
+{% extends 'bases/base.html' %}
+{% load static %}
+
+{% block 'titulo' %}Extrato{% endblock  %}
+
+{% block 'head' %}
+  <link href="{% static 'css/home.css' %}" rel="stylesheet">
+  <link href="{% static 'css/extrato.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block 'body' %}
+  <br>
+  <br>
+  <div class='container'>
+    <span class="fonte-destaque">Extrato de transferências</span>
+    <br>
+    <br>
+    <br>
+
+    <div class="card">
+        
+      <table>
+        <tr>
+          <th>Conta partida</th>
+          <th>Conta destino</th>
+          <th>Data da transferência</th>
+          <th>Valor</th>
+        </tr>
+        
+        {% for transferencia in transferencias %}
+          <tr class="linha">
+            <td class="negativo">{{transferencia.conta_partida}}</td>
+            <td class="positivo">{{transferencia.conta_destino}}</td>
+            <td>{{transferencia.data|date:"d/m/Y"}}</td>
+            <td>R$ {{transferencia.valor|floatformat:2}}</td>
+          </tr>
+        {% endfor %}
+      </table>
+        
+    </div>
+  </div>
+{% endblock %}
