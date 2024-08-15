@@ -20,17 +20,20 @@ def ver_extrato(request):
   periodo = request.GET.get('periodo')  # Filtrar pelo período
   saidas = []
 
+  if id_conta:
+    movimentacao = movimentacao.filter(conta__id=id_conta)
+    contas_mensais = contas_mensais.filter(conta_pagamento__id=id_conta)
+  if id_categoria:
+    movimentacao = movimentacao.filter(categoria__id=id_categoria)
+    contas_mensais = contas_mensais.filter(categoria__id=id_categoria)
+
+
   for saida in movimentacao:
     saidas += [{'conta': saida.conta, 'categoria': saida.categoria, 'data': saida.data, 'tipo': saida.tipo, 'valor': saida.valor},]
   for saida in contas_mensais:
     saidas += [{'conta': saida.conta_pagamento, 'categoria': saida.categoria, 'data': saida.pago_dia, 'tipo': saida.categoria.tipo, 'valor': saida.valor},]
 
   saidas = sorted(saidas, key=lambda x: x['data'])  # Ordenando a lista de saídas pela data de pagamento.
-
-  if id_conta:
-    movimentacao = movimentacao.filter(conta__id=id_conta)
-  if id_categoria:
-    movimentacao = movimentacao.filter(categoria__id=id_categoria)
 
   # Fazer  filtrar por período.
   # if periodo:

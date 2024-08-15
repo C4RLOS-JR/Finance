@@ -115,12 +115,12 @@
           <hr class="hr-borda">
           
           <span class="fonte-destaque negativo">Vencidas</span>
-          <span class="fonte-light">{{vencidas}} contas vencidas.</span>
+          <span class="fonte-light">Contas vencidas -> {{vencidas}}</span>
           <br>
-          <span class="fonte-destaque atencao">Próximas do vencimento.</span>
-          <span class="fonte-light">{{proximas_vencimento}} contas próximas do vencimento.</span>
-          <span class="fonte-light">{{vence_hoje}} vence hoje.</span>
-          <span class="fonte-light">{{outras}} vence esse mês.</span>
+          <span class="fonte-destaque atencao">Á vencer</span>
+          <span class="fonte-light">Próximas do vencimento -> {{proximas_vencimento}}</span>
+          <span class="fonte-light">Vencem hoje -> {{vence_hoje}}</span>
+          <span class="fonte-light">Vencem esse mês -> {{outras}}</span>
           
           <hr class="hr-borda">
 
@@ -167,7 +167,7 @@
           </div>
           <br>
 
-          <h5>Contas Mensais</h5>
+          <h5 class="negativo">Contas Mensais</h5>
           {% for categoria in categorias %}
             {% if categoria.valor_planejamento != 0 %}
               {% if categoria.tipo == 'M' %}
@@ -186,7 +186,7 @@
                 </div>
 
                 <div class="progress">
-                  <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: {{categoria.percentual_gasto_mensal}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div class="progress-bar progress-bar-striped {% if categoria.valor_planejamento > categoria.valor_gasto_mensal %} bg-success {% else %}  bg-danger {% endif %}" role="progressbar" style="width: {{categoria.percentual_gasto_mensal}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
                 <br>
               {% endif %}
@@ -194,7 +194,7 @@
           {% endfor %}
           <hr>
 
-          <h5>Movimentações</h5>
+          <h5 class="negativo">Movimentações</h5>
           {% for categoria in categorias %}
             {% if categoria.tipo == 'S' %}
               {% if categoria.valor_planejamento != 0 %}
@@ -213,7 +213,7 @@
                   </div>
 
                   <div class="progress">
-                    <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: {{categoria.percentual_gasto_saida}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar progress-bar-striped {% if categoria.valor_planejamento > categoria.valor_gasto_saida %} bg-success {% else %}  bg-danger {% endif %}" role="progressbar" style="width: {{categoria.percentual_gasto_saida}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                   <br>
               {% endif %}
@@ -237,7 +237,7 @@
           </div>
 
           <div class="progress" style="height: 30px;">
-            <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" style="width: {{percentual_planejamento_total}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: {{percentual_planejamento_total}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
 
           <hr class="hr-borda">
