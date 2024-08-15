@@ -34,7 +34,7 @@
                       {{conta.titulo}}
                     </div>
                     <div class="col-md text-center">
-                      Venceu no dia {{conta.dia_vencimento}}
+                      Venceu dia - {{conta.dia_vencimento|date:"d/m/Y"}}
                     </div>
                     <div class="col-md text-center">
                       <a href="{% url 'pagar_contas' conta.id %}" class="botao-principal">Pagar</a>
@@ -62,7 +62,7 @@
                 <div class="linha-conta">
                   <div class="row">
                     <div class="col-md text-center">
-                      {{conta.dia_vencimento}}
+                      {{conta.titulo}}
                     </div>
                     {% if conta.dia_vencimento == hoje %}
                       <div class="col-md text-center">
@@ -70,7 +70,7 @@
                       </div>
                     {% else %}
                       <div class="col-md text-center">
-                        Vai vencer no dia {{conta.dia_vencimento}}
+                        Vai vencer dia - {{conta.dia_vencimento|date:"d/m/Y"}}
                       </div>
                     {% endif %}
                     <div class="col-md text-center">
@@ -102,7 +102,7 @@
                       {{conta.titulo}}
                     </div>
                     <div class="col-md text-center">
-                      Vencimento no dia {{conta.dia_vencimento}}
+                      Vencimento dia - {{conta.dia_vencimento|date:"d/m/Y"}}
                     </div>
                     <div class="col-md text-center">
                       <a href="{% url 'pagar_contas' conta.id %}" class="botao-principal">Antecipar</a>
@@ -133,7 +133,7 @@
                       {{conta.titulo}}
                     </div>
                     <div class="col-md text-center">
-                      Foi paga no dia {{conta.pago_dia}}
+                      Foi paga dia - {{conta.pago_dia|date:"d/m/Y"}}
                     </div>
                     <div class="col-md text-center">
                       Valor pago R$ {{conta.valor|floatformat:2}}

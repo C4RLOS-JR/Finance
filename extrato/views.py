@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, FileResponse
 from perfil.models import Conta, Categoria
-from contas.models import Movimentacao
+from contas.models import Movimentacao, ContasMensais
 from datetime import datetime
 from django.template.loader import render_to_string
 import os
@@ -12,11 +12,20 @@ from io import BytesIO
 def ver_extrato(request):
   contas = Conta.objects.all()
   categorias = Categoria.objects.all()
-  id_conta = request.GET.get('id_conta')
-  id_categoria = request.GET.get('id_categoria')
-  periodo = request.GET.get('periodo')
-
   movimentacao = Movimentacao.objects.filter(data__month=datetime.now().month) # Filtra e traz os valores do mês atual.
+  contas_mensais = ContasMensais.objects.filter(pago_dia__month=datetime.now().month).filter(conta_paga=True) # Filtra e traz os valores do mês atual e contas pagas.
+
+  id_conta = request.GET.get('id_conta')  # Filtrar pela conta
+  id_categoria = request.GET.get('id_categoria')  # Filtrar pela categoria
+  periodo = request.GET.get('periodo')  # Filtrar pelo período
+  saidas = []
+
+  for saida in movimentacao:
+    saidas += [{'conta': saida.conta, 'categoria': saida.categoria, 'data': saida.data, 'tipo': saida.tipo, 'valor': saida.valor},]
+  for saida in contas_mensais:
+    saidas += [{'conta': saida.conta_pagamento, 'categoria': saida.categoria, 'data': saida.pago_dia, 'tipo': saida.categoria.tipo, 'valor': saida.valor},]
+
+  saidas = sorted(saidas, key=lambda x: x['data'])  # Ordenando a lista de saídas pela data de pagamento.
 
   if id_conta:
     movimentacao = movimentacao.filter(conta__id=id_conta)
@@ -30,7 +39,10 @@ def ver_extrato(request):
   #     periodo = 1
   #   movimentacao = movimentacao.filter()
   
-  return render(request, 'extrato.html', {'contas': contas, 'categorias': categorias, 'movimentacao': movimentacao})
+  return render(request, 'extrato.html', {
+    'contas': contas,
+    'categorias': categorias,
+    'saidas': saidas})
 
 def exportar_pdf(request):
   movimentacao = Movimentacao.objects.filter(data__month=datetime.now().month) # Filtra e traz os valores do mês atual.

@@ -77,19 +77,19 @@
           <th>valor</th>
         </tr>
         
-        {% for valor in movimentacao %}
+        {% for saida in saidas %}
           <tr class="linha">
-            <td width="10%">{{valor.conta}}</td>
-            <td>{{valor.categoria}}</td>
-            <td>{{valor.data}}</td>
+            <td width="10%">{{saida.conta}}</td>
+            <td>{{saida.categoria}}</td>
+            <td>{{saida.data|date:"d/m/Y"}}</td>
             <td>
-              {% if valor.tipo == 'S'%}
-                <img width="25px" src="{% static 'img/perfil/saidas.png' %}">
-              {% else %}
+              {% if saida.tipo == 'E'%}
                 <img width="25px" src="{% static 'img/perfil/entradas.png' %}">
+              {% else %}
+                <img width="25px" src="{% static 'img/perfil/saidas.png' %}">
               {% endif %}
             </td>
-            <td class="{% if valor.tipo == 'S' %} negativo {% else %} positivo {% endif %}">R$ {{valor.valor|floatformat:2}}</td>
+            <td class="{% if saida.tipo == 'S' %} negativo {% else %} positivo {% endif %}">R$ {{saida.valor|floatformat:2}}</td>
               
           </tr>
         {% endfor %}

@@ -16,9 +16,10 @@ def home(request):
   contas_mensais = ContasMensais.objects.filter(dia_vencimento__month=DATA_ATUAL.month).filter(conta_paga=True)
   contas_mensais_nao_pagas = ContasMensais.objects.filter(dia_vencimento__month=DATA_ATUAL.month).filter(conta_paga=False)
   
-  vencidas = contas_mensais_nao_pagas.filter(dia_vencimento__day__lt=DATA_ATUAL.day).count()
-  proximas_vencimento = contas_mensais_nao_pagas.filter(dia_vencimento__day__gt=DATA_ATUAL.day).filter(dia_vencimento__day__lte=DATA_ATUAL.day+5).count()
-  vence_hoje = contas_mensais_nao_pagas.filter(dia_vencimento=DATA_ATUAL).count()
+  vencidas = contas_mensais_nao_pagas.filter(dia_vencimento__day__lt=DATA_ATUAL.day)
+  proximas_vencimento = contas_mensais_nao_pagas.filter(dia_vencimento__day__gt=DATA_ATUAL.day).filter(dia_vencimento__day__lte=DATA_ATUAL.day+5)
+  vence_hoje = contas_mensais_nao_pagas.filter(dia_vencimento=DATA_ATUAL)
+  outras = contas_mensais_nao_pagas.exclude(id__in=vencidas).exclude(id__in=proximas_vencimento).exclude(id__in=vence_hoje)
 
 
   print(vencidas)
@@ -52,9 +53,10 @@ def home(request):
   return render(request, 'home.html',{
     'contas': contas,
     'categorias': categorias,
-    'vencidas': vencidas,
-    'proximas_vencimento':proximas_vencimento,
-    'vence_hoje': vence_hoje,
+    'vencidas': vencidas.count(),
+    'proximas_vencimento':proximas_vencimento.count(),
+    'vence_hoje': vence_hoje.count(),
+    'outras': outras.count(),
     'total_saidas': total_saidas,
     'total_entradas': total_entradas,
     'total_despesas': total_despesas,
