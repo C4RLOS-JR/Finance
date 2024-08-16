@@ -26,11 +26,6 @@ class Categoria(models.Model):
     valores = ContasMensais.objects.filter(categoria__id=self.id).filter(dia_vencimento__month=datetime.now().month).filter(conta_paga=True)
     return calcular_total(valores, 'valor') # calcular_total(objetos, campo)
   
-  # def saidas(self): # Retorna somente as movimentações de saída.
-  #   from contas.models import Movimentacao
-  #   saidas = Movimentacao.objects.filter(categoria__id=self.id).filter(tipo='S')
-  #   return saidas
-  
   def percentual_gasto_saida(self): # Barra de progresso 'movimentação'.
     if self.valor_planejamento:
       return int((self.valor_gasto_saida() * 100) / self.valor_planejamento)

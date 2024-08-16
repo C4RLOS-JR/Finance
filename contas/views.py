@@ -53,7 +53,7 @@ def movimentacao(request, tipo_movimentacao):
         tipo = tipo_movimentacao)
       novo_valor.save()
 
-      return redirect(f'../movimentacao/{tipo_movimentacao}')
+      return redirect('home')
     except:
       messages.add_message(request, constants.ERROR, 'Algo deu errado...tente novamente ou fale com um administrador!')
       return redirect(f'../movimentacao/{tipo_movimentacao}')

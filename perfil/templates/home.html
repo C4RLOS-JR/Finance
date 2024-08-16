@@ -10,14 +10,14 @@
 {% block 'body' %}
   <div class="container">
     <br>
-      <!--Mensagens-->
-      <div class="row messages">
-        {% if messages %}
-          {% for message in messages %}
-            <div class="alert {{message.tags}}" role="alert">{{message}}</div>
-          {% endfor %}
-        {% endif %}
-      </div>
+    <!--Mensagens-->
+    <div class="row messages">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {{message.tags}}" role="alert">{{message}}</div>
+        {% endfor %}
+      {% endif %}
+    </div>
     <br>
 
     <div class="row">
@@ -115,12 +115,12 @@
           <hr class="hr-borda">
           
           <span class="fonte-destaque negativo">Vencidas</span>
-          <span class="fonte-light">Contas vencidas -> {{vencidas}}</span>
+          <span class="fonte-light">Contas vencidas = {{vencidas}}</span>
           <br>
           <span class="fonte-destaque atencao">Á vencer</span>
-          <span class="fonte-light">Próximas do vencimento -> {{proximas_vencimento}}</span>
-          <span class="fonte-light">Vencem hoje -> {{vence_hoje}}</span>
-          <span class="fonte-light">Vencem esse mês -> {{outras}}</span>
+          <span class="fonte-light">Vence hoje = {{vence_hoje}}</span>
+          <span class="fonte-light">Próximas do vencimento = {{proximas_vencimento}}</span>
+          <span class="fonte-light">Vence esse mês = {{outras}}</span>
           
           <hr class="hr-borda">
 
@@ -144,6 +144,21 @@
                 <span class="font-light">R$ {{total_entradas|floatformat:2}}</span>
               </div>
             </div>
+
+            <div class="col-md" style="text-align: center">
+              <div class="">
+                <span class="fonte-destaque">Equilíbrio</span>
+                <br>
+                <div>
+                  {% if total_entradas > total_despesas %}
+                    <img class="icones" src="{% static 'img/perfil/equilibrio_receita.png' %}" alt="">
+                  {% else %}
+                    <img class="icones" src="{% static 'img/perfil/equilibrio_despesa.png' %}" alt="">
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
             <div class="col-md">
               <div class="despesa">
                 <span class="fonte-destaque">Despesa mensal</span>
@@ -182,7 +197,7 @@
                 </div>
 
                 <div class="progress">
-                  <div class="progress-bar progress-bar-striped {% if categoria.valor_planejamento > categoria.valor_gasto_mensal %} bg-success {% else %}  bg-danger {% endif %}" role="progressbar" style="width: {{categoria.percentual_gasto_mensal}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div class="progress-bar progress-bar-striped {% if categoria.valor_planejamento > categoria.valor_gasto_saida %} bg-success {% else %}  bg-danger {% endif %}" role="progressbar" style="width: {{categoria.percentual_gasto_mensal}}%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
                 <br>
               {% endif %}
@@ -227,7 +242,7 @@
               <span style="float: right !important;">
                 <span>R$ {{planejamento_total|floatformat:2}}</span>
                 <span> | </span>
-                <span class="{% if valor_total_planejamento > planejamento_total %} positivo {% else %} negativo {% endif %}">R$ {{valor_total_planejamento|floatformat:2}}</span>
+                <span class="{% if valor_total_planejamento > planejamento_total %} positivo {% elif valor_total_planejamento < planejamento_total %} negativo {% endif %}">R$ {{valor_total_planejamento|floatformat:2}}</span>
               </span>
             </div>
           </div>
@@ -245,4 +260,5 @@
     </div>
     <br>
   </div>
+
 {% endblock %}

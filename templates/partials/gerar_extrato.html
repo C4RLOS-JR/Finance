@@ -18,8 +18,8 @@
     {% for saida in saidas %}
       <tr class="linha">
         <td>{{saida.conta}}</td>
-        <td>{{saida.categoria}}</td>
-        <td>{{saida.data|date:"d/m/Y"}}</td>
+        <td style="text-align: center">{{saida.categoria}}</td>
+        <td style="text-align: center">{{saida.data|date:"d/m/Y"}}</td>
         <td style="text-align: center">
           {% if saida.tipo == 'S'%}
             <span>Saída</span>
@@ -27,7 +27,7 @@
             <span>Entrada</span>
           {% endif %}
         </td>
-        <td style="float: right">R$ {{saida.valor|floatformat:2}}</td>
+        <td ><span  style="text-align: left">&nbspR$</span><span style="float: right">{{saida.valor|floatformat:2}}</span></td>
       </tr>
     {% endfor %}
   </table>
