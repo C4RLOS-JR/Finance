@@ -33,6 +33,7 @@ def ver_extrato(request):
     saidas += [{'conta': saida.conta_pagamento, 'categoria': saida.categoria, 'data': saida.pago_dia, 'tipo': saida.categoria.tipo, 'valor': saida.valor},]
 
   saidas = sorted(saidas, key=lambda x: x['data'])  # Ordenando a lista de saídas pela data de pagamento.
+  saidas.reverse()
 
   # Fazer  filtrar por período.
   # if periodo:
@@ -49,6 +50,7 @@ def ver_extrato(request):
 
 def extrato_transferencias(request):
   transferencias = Transferencias.objects.filter(data__month=datetime.now().month)
+  transferencias.reverse()
   return render(request, 'extrato_transferencias.html', {'transferencias': transferencias})
 
 

@@ -57,25 +57,41 @@ def movimentacao(request, tipo_movimentacao):
     except:
       messages.add_message(request, constants.ERROR, 'Algo deu errado...tente novamente ou fale com um administrador!')
       return redirect(f'../movimentacao/{tipo_movimentacao}')
-    
 
-def definir_contas(request):
-  categorias = Categoria.objects.all()
+
+def contas_mensais(request):
   if request.method == 'GET':
-    return render(request, 'definir_contas.html', {'categorias': categorias})
+    DATA_ATUAL = datetime.now()
+
+    categorias = Categoria.objects.all()
+    contas = ContasMensais.objects.all().order_by('dia_vencimento')
+    contas_pagas = contas.filter(conta_paga=True)
+    contas_vencidas = contas.filter(dia_vencimento__lt=DATA_ATUAL).exclude(id__in=contas_pagas)  # Filtra pelas contas que tem o dia de pagamento menor que o dia atual e que seu "id" não esteja em "contas_pagas".
+    contas_proximas_vencimento = contas.filter(dia_vencimento__gte=DATA_ATUAL).filter(dia_vencimento__day__lte=DATA_ATUAL.day+5).exclude(id__in=contas_pagas)
+    contas_restantes = contas.exclude(id__in=contas_pagas).exclude(id__in=contas_vencidas).exclude(id__in=contas_proximas_vencimento)
+
+    return render(request, 'contas_mensais.html', {
+      'categorias': categorias,
+      'contas_pagas': contas_pagas,
+      'contas_vencidas': contas_vencidas,
+      'contas_proximas_vencimento': contas_proximas_vencimento,
+      'contas_restantes': contas_restantes,
+      'hoje': DATA_ATUAL
+      })
   
   elif request.method == 'POST':
     titulo = request.POST.get('titulo')
     valor = request.POST.get('valor')
     categoria = request.POST.get('categoria')
     dia_vencimento = request.POST.get('dia_vencimento')
+    valor = valor.replace(',', '.')
 
     if not valor:
       valor = None
 
-    if (len(titulo.strip())==0) and (len(categoria.strip())==0) and (len(valor.strip())==0) and (len(dia_vencimento.strip())==0):
+    if (len(titulo.strip())==0) or (len(categoria.strip())==0) or (len(valor.strip())==0) or (len(dia_vencimento.strip())==0):
       messages.add_message(request, constants.ERROR, 'Preencha todos os campos!')
-      return redirect('definir_contas')
+      return redirect('contas_mensais')
 
     try:
       nova_conta = ContasMensais(
@@ -85,30 +101,12 @@ def definir_contas(request):
         dia_vencimento = dia_vencimento
       )
       nova_conta.save()
-
       messages.add_message(request, constants.SUCCESS, 'Nova conta criada com sucesso!')
-      return redirect('home')
+
     except:
       messages.add_message(request, constants.ERROR, 'Algo deu errado...tente novamente ou fale com um administrador!')
-      return redirect('definir_contas')
-
-
-def ver_contas(request):
-  DATA_ATUAL = datetime.now()
-
-  contas = ContasMensais.objects.all().order_by('dia_vencimento')
-  contas_pagas = contas.filter(conta_paga=True)
-  contas_vencidas = contas.filter(dia_vencimento__lt=DATA_ATUAL).exclude(id__in=contas_pagas)  # Filtra pelas contas que tem o dia de pagamento menor que o dia atual e que seu "id" não esteja em "contas_pagas".
-  contas_proximas_vencimento = contas.filter(dia_vencimento__gte=DATA_ATUAL).filter(dia_vencimento__day__lte=DATA_ATUAL.day+5).exclude(id__in=contas_pagas)
-  contas_restantes = contas.exclude(id__in=contas_pagas).exclude(id__in=contas_vencidas).exclude(id__in=contas_proximas_vencimento)
-
-  return render(request, 'ver_contas.html', {
-    'contas_pagas': contas_pagas,
-    'contas_vencidas': contas_vencidas,
-    'contas_proximas_vencimento': contas_proximas_vencimento,
-    'contas_restantes': contas_restantes,
-    'hoje': DATA_ATUAL
-    })
+      
+    return redirect('contas_mensais')
 
 
 def pagar_contas(request, conta_id):
@@ -149,7 +147,7 @@ def pagar_contas(request, conta_id):
     pagar_conta.save()
 
     messages.add_message(request, constants.SUCCESS, f'A conta mensal "{pagar_conta.titulo}" foi paga usando a conta "{conta.nome}"!')
-    return redirect('ver_contas')
+    return redirect('contas_mensais')
   
 
 def transferir(request):

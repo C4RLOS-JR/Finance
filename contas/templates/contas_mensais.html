@@ -1,0 +1,236 @@
+{% extends 'bases/base.html' %}
+{% load static %}
+
+{% block 'titulo' %}Contas Mensais{% endblock  %}
+
+{% block 'head' %}
+    <link href="{% static 'css/home.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block 'body' %}
+
+  <div class="container">
+    <br>
+    <!--Mensagens-->
+    <div class="row messages">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert {{message.tags}}" role="alert">{{message}}</div>
+        {% endfor %}
+      {% endif %}
+    </div>
+    <br>
+
+    <div class="row">
+      <div class="col-md-7">
+        <p class="fonte-destaque negativo">Contas vencidas</p>
+        <div class="card">
+          {% if contas_vencidas %}
+            {% for conta in contas_vencidas %}
+              <div class="linha-conta">
+                <div class="row">
+                  <div class="col-md text-center">
+                    {{conta.titulo}}
+                  </div>
+                  <div class="col-md text-center">
+                    Venceu dia - {{conta.dia_vencimento|date:"d/m/Y"}}
+                  </div>
+                  <div class="col-md text-center">
+                    <a href="{% url 'pagar_contas' conta.id %}" class="btn btn-success">Pagar</a>
+                  </div> 
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="linha-conta">
+              <div class="row">
+                <div class="col-md text-center">
+                  Nenhuma conta vencida...
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+        <br>
+        <br>
+
+        <p class="fonte-destaque atencao">Contas próximas do vencimento</p>
+        <div class="card">
+          {% if contas_proximas_vencimento %}
+            {% for conta in contas_proximas_vencimento %}
+              <div class="linha-conta">
+                <div class="row">
+                  <div class="col-md text-center">
+                    {{conta.titulo}}
+                  </div>
+                  {% if conta.dia_vencimento == hoje %}
+                    <div class="col-md text-center">
+                      Vence hoje
+                    </div>
+                  {% else %}
+                    <div class="col-md text-center">
+                      Vai vencer dia - {{conta.dia_vencimento|date:"d/m/Y"}}
+                    </div>
+                  {% endif %}
+                  <div class="col-md text-center">
+                    <a href="{% url 'pagar_contas' conta.id %}" class="btn btn-success">Pagar</a>
+                  </div> 
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="linha-conta">
+              <div class="row">
+                <div class="col-md text-center">
+                  Nenhuma conta próxima do vencimento...
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+        <br>
+        <br>
+
+        <p class="fonte-destaque normal">Contas ao longo do mês</p>
+        <div class="card">
+          {% if contas_restantes %}
+            {% for conta in contas_restantes %}
+              <div class="linha-conta">
+                <div class="row">
+                  <div class="col-md text-center">
+                    {{conta.titulo}}
+                  </div>
+                  <div class="col-md text-center">
+                    Vencimento dia - {{conta.dia_vencimento|date:"d/m/Y"}}
+                  </div>
+                  <div class="col-md text-center">
+                    <a href="{% url 'pagar_contas' conta.id %}" class="btn btn-success">Antecipar</a>
+                  </div> 
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="linha-conta">
+              <div class="row">
+                <div class="col-md text-center">
+                  Nenhuma conta por aqui...
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+        <br>
+        <br>
+
+        <p class="fonte-destaque positivo">Contas pagas</p>
+        <div class="card">
+          {% if contas_pagas %}
+            {% for conta in contas_pagas %}
+              <div class="linha-conta">
+                <div class="row">
+                  <div class="col-md text-center">
+                    {{conta.titulo}}
+                  </div>
+                  <div class="col-md text-center">
+                    Foi paga dia - {{conta.pago_dia|date:"d/m/Y"}}
+                  </div>
+                  <div class="col-md text-center">
+                    Valor pago R$ {{conta.valor|floatformat:2}}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="linha-conta">
+              <div class="row">
+                <div class="col-md text-center">
+                  Nenhuma conta paga este mês...
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="col-md-1"></div>
+
+      <div class="col-md-4">
+        <span class="fonte-destaque">Adicionar conta mensal</span>
+        <br>
+        <br>
+
+        <form class="card" action="{% url 'contas_mensais' %}" method="POST">{% csrf_token %}
+          <div class="row">
+            <div class="col-md">
+              <label>Título</label>
+              <input name="titulo" type="text" class="form-control">
+            </div>
+
+            <div class="col-md">
+              <label>Categoria</label>
+              <select name="categoria" class="form-select">
+                <option value="">Escolha uma categoria</option>
+                {% for categoria in categorias %}
+                  {% if categoria.tipo == 'M' %}
+                    <option value="{{categoria.id}}">{{categoria}}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+              <a style="float: right" href="{% url 'gerenciar' %}">Criar categoria</a>
+            </div>
+          </div>
+          <br>
+
+          <div class="row">
+            <div class="col-md">
+              <label>Valor</label>  
+              <input type="number" step="0.01" name="valor" class="form-control">
+            </div>
+
+            <div class="col-md">
+              <label>Dia de vencimento</label>
+              <input type="date" name="dia_vencimento" min="1" max="31" class="form-control">
+            </div>
+          </div>
+          <br>
+          <br>
+          <br>
+
+          <div class="row">
+            <div class="col-md">
+              <input type="submit" class="botao-principal" value="Adicionar">
+            </div>
+          </div>
+        </form>
+        <br>
+        <br>
+
+        <p class="fonte-destaque">Relatório</p>
+        <div class="card">
+          <div class="linha-conta">
+            <div class="row">
+              
+              <div class="col-md-1"></div>
+              <div class="col-md-8">
+                <p class="fonte-destaque negativo">Contas vencidas:&nbsp&nbsp</p>
+                <p class="fonte-destaque atencao">Contas á vencer:&nbsp&nbsp</p>
+                <p class="fonte-destaque normal">Contas á pagar:&nbsp&nbsp</p>
+                <p class="fonte-destaque positivo">Contas pagas:&nbsp&nbsp</p>
+              </div>              
+              <div class="col-md-3" style="text-align: center">
+                <p class="fonte-destaque">{{contas_vencidas.count}}</p>
+                <p class="fonte-destaque">{{contas_proximas_vencimento.count}}</p>
+                <p class="fonte-destaque">{{contas_restantes.count}}</p>
+                <p class="fonte-destaque">{{contas_pagas.count}}</p>
+              </div>              
+                          
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    <br>
+  </div>
+
+{% endblock %}
