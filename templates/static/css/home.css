@@ -102,6 +102,11 @@
   padding-right: 10px;
 }
 
+.equilibrio {
+  border-left: 4px solid var(--positive-color);
+  border-right: 4px solid var(--negative-color);
+}
+
 .normal {
   color: var(--contrast-color);
 }
