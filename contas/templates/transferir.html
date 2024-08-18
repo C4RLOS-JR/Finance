@@ -20,7 +20,7 @@
         {% endif %}
       </div>
       <br>
-      <span class="fonte-destaque">Transferir entre contas</span>
+      <span class="fonte-destaque">Transferência entre contas</span>
       <br>
       <br>
       
@@ -33,7 +33,7 @@
               <div class="col-md">
                 <label>Enviar da conta</label>
                 <select name="id_conta_partida" class="form-select">
-                  <option value="">Escolha a conta de partida</option>
+                  <option value="">Escolha a conta de saída</option>
                   {% for conta in contas %}
                       <option value="{{conta.id}}">{{conta}}</option>
                   {% endfor %}
@@ -43,7 +43,7 @@
               <div class="col-md">
                 <label>Receber na conta</label>
                 <select name="id_conta_destino" class="form-select">
-                  <option value="">Escolha a conta de destino</option>
+                  <option value="">Escolha a conta de entrada</option>
                   {% for conta in contas %}
                       <option value="{{conta.id}}">{{conta}}</option>
                   {% endfor %}

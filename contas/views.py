@@ -163,12 +163,12 @@ def transferir(request):
     valor = valor.replace(',', '.')
     data = request.POST.get('data')
 
-    if id_conta_partida == id_conta_destino:
-      messages.add_message(request, constants.ERROR, 'As contas precisam ser diferentes!')
-      return redirect('transferir')
-
     if (len(id_conta_partida.strip())==0) or (len(id_conta_destino.strip())==0) or (len(valor.strip())==0):
       messages.add_message(request, constants.ERROR, 'Preencha todos os campos!')
+      return redirect('transferir')
+    
+    if id_conta_partida == id_conta_destino:
+      messages.add_message(request, constants.ERROR, 'As contas precisam ser diferentes!')
       return redirect('transferir')
     
     try:

@@ -26,10 +26,11 @@
       <span class="fonte-destaque">Pagar conta</span>
       <br>
       <br>
+
       <div class="row">
 
         <div class="col-md-7">
-          <form action="{% url 'pagar_contas' conta_id %}" method="POST">{% csrf_token %}
+          <form class="card" action="{% url 'pagar_contas' conta_id %}" method="POST">{% csrf_token %}
             <div class="row">
               <div class="col-md">
                 <label>Título</label>
