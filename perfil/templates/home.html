@@ -88,7 +88,7 @@
         <!-- Suas contas -->
         <div class="card">
           <span class="fonte-destaque destaque">Suas contas</span>
-          <br>
+          <hr class="hr-borda">
           <div class="div-contas">
             {% for conta in contas %}
             <div class="lista-conta">
@@ -116,7 +116,7 @@
           
           <span class="fonte-destaque negativo">Vencidas</span>
           <span class="fonte-light">Contas vencidas = {{vencidas}}</span>
-          <br>
+          <hr>
 
           <span class="fonte-destaque atencao">Á vencer</span>
           <span class="fonte-light">Vence hoje = {{vence_hoje}}</span>
@@ -157,7 +157,7 @@
                   <div class="col-md-2">
                     {% if total_entradas > total_despesas %}
                       <img width="20px" src="{% static 'img/perfil/receita.png' %}">
-                    {% else %}
+                    {% elif total_entradas < total_despesas %}
                       <img width="20px" src="{% static 'img/perfil/despesa.png' %}">
                     {% endif %}
                   </div>
@@ -188,7 +188,7 @@
           <div>
             <span class="fonte-destaque destaque">Planejamento</span>
           </div>
-          <br>
+          <hr class="hr-borda">
 
           <h5 class="normal">Contas Mensais</h5>
           {% for categoria in categorias %}
