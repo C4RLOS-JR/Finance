@@ -51,28 +51,39 @@
         <p class="fonte-destaque">Nova conta</p>
           
         <form action="{% url 'cadastrar_banco' %}" method="POST" enctype="multipart/form-data"> {% csrf_token %}
-          <label>Nome da conta</label>
-          <input type="text" name="nome" class="form-control" placeholder="Nome">
+          <div class="row">
+            <div class="col-md">
+              <label>Nome da conta</label>
+              <input type="text" name="nome" class="form-control" placeholder="Nome">
+            </div>
+            <div class="col-md">
+              <label>Banco</label>
+              <select name="banco" class="form-select">
+                <option value="">Escolha um banco</option>
+                <option value="NU">NuBank</option>
+                <option value="CE">Caixa Econômica</option>
+                <option value="MP">Mercado Pago</option>
+              </select>
+            </div>
+          </div>
           <br>
-          <label>Banco</label>
-          <select name="banco" class="form-select">
-              <option value="">Escolha um banco</option>
-              <option value="NU">NuBank</option>
-              <option value="CE">Caixa Econômica</option>
-              <option value="MP">Mercado Pago</option>
-          </select>
+
+          <div class="row">
+            <div class="col-md">
+              <label>Valor</label>
+              <input type="number" name="valor" class="form-control" placeholder="R$" step="0.01">
+            </div>
+            <div class="col-md">
+              <label>Tipo</label>
+              <select name="tipo" class="form-select">
+                <option value="pf">Pessoa física</option>
+                <option value="pj">Pessoa jurídica</option>
+              </select>
+            </div>
+          </div>
           <br>
-          <label>Tipo</label>
-          <select name="tipo" class="form-select">
-              <option value="pf">Pessoa física</option>
-              <option value="pj">Pessoa jurídica</option>
-          </select>
-          <br>
-          <label>Valor</label>
-          <input type="number" name="valor" class="form-control" placeholder="R$" step="0.01">
-          <br>
-          <label>Icone</label>
-          <br>
+          
+          <label>Icone&nbsp&nbsp&nbsp</label>
           <input type="file" placeholder="Ícone" name="icone">
           <br>
           <br>
@@ -151,19 +162,26 @@
         <p class="fonte-destaque">Nova categoria</p>
 
         <form action="{% url 'cadastrar_categoria' %}" method="POST"> {% csrf_token %}
-          <label>Categoria</label>
-          <input type="text" name="categoria" class="form-control">
-          <br>
-
-          <label>Tipo</label>
-          <br>
-          <input type="radio" name="tipo" value="E"><label>&nbspEntrada</label>
-          <input type="radio" name="tipo" value="S"><label>&nbspSaída</label>
-          <input type="radio" name="tipo" value="M"><label>&nbspMensal</label>
-
-          <br>
-          <br>
-          <input style="width: 100%" type="submit" class="botao-principal" value="Adicionar Categoria">
+          <div class="row">
+            <div class="col-md">
+              <label>Categoria</label>
+              <input type="text" name="categoria" class="form-control">
+              <br>
+            </div>
+            <div class="col-md">
+              <label>Tipo</label>
+              <br>
+              <div style="margin-left: 30px">
+                <input type="radio" name="tipo" value="E"><label class="positivo">&nbspEntrada</label>
+                <input type="radio" name="tipo" value="S"><label class="negativo">&nbspSaída</label>
+                <input type="radio" name="tipo" value="M"><label class="atencao">&nbspMensal</label>
+              </div>
+            </div>
+            
+            <br>
+            <br>
+            <input style="width: 100%" type="submit" class="botao-principal" value="Adicionar Categoria">
+          </div>
         </form>
       </div>
     </div>

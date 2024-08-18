@@ -16,7 +16,7 @@
     <br>
     <br>
 
-    <form action="{% url 'ver_extrato' %}" method="GET">
+    <form action="{% url 'ver_extrato' %}" method="POST"> {% csrf_token %}
       <div class="row">
 
         <div class="col-md">
@@ -38,13 +38,11 @@
             {% endfor %}
           </select>
         </div>
-
+        
         <div class="col-md">
-          <label>Período</label>
-          <select name="periodo" class="form-select">
-            <option value="">Selecione um período</option>
-            <option value="7">Últimos 7 dias</option>
-          </select>
+          <label>Mês</label>
+          <br>
+          <input type="month" name="mes" class="form-control" placeholder="Selecione um mês">
         </div>  
       </div>
       <br>
@@ -56,7 +54,7 @@
         </div>
 
         <div class="col-md-2">
-          <a href="{% url 'ver_extrato' %}" style="width: 100%" type="button" class="botao-principal">Todos</a>
+          <a href="{% url 'ver_extrato' %}" style="width: 100%" type="button" class="botao-principal">Este mês</a>
         </div>
 
         <div class="col-md-2">
@@ -79,16 +77,18 @@
         
       <table>
         <tr>
-          <th>Conta</th>
-          <th>Categoria</th>
-          <th>Data</th>
-          <th>Tipo</th>
-          <th>Valor</th>
+          <th style="width: 20%; border-bottom: 1px solid black; text-align: center">Conta</th>
+          <th style="width: 20%; border-bottom: 1px solid black; text-align: center">Título</th>
+          <th style="width: 20%; border-bottom: 1px solid black; text-align: center">Categoria</th>
+          <th style="width: 10%; border-bottom: 1px solid black; text-align: center">Data</th>
+          <th style="width: 15%; border-bottom: 1px solid black; text-align: center">Tipo</th>
+          <th style="width: 15%; border-bottom: 1px solid black; text-align: center">Valor</th>
         </tr>
         
         {% for saida in saidas %}
           <tr class="linha">
             <td>{{saida.conta}}</td>
+            <td>{{saida.titulo}}</td>
             <td>{{saida.categoria}}</td>
             <td>{{saida.data|date:"d/m/Y"}}</td>
             <td>

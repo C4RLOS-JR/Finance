@@ -12,36 +12,38 @@ from io import BytesIO
 def ver_extrato(request):
   contas = Conta.objects.all()
   categorias = Categoria.objects.all()
-  movimentacao = Movimentacao.objects.filter(data__month=datetime.now().month) # Filtra e traz os valores do mês atual.
-  contas_mensais = ContasMensais.objects.filter(pago_dia__month=datetime.now().month).filter(conta_paga=True) # Filtra e traz os valores do mês atual e contas pagas.
+  movimentacao = Movimentacao.objects.all()
+  contas_mensais = ContasMensais.objects.all()
 
-  id_conta = request.GET.get('id_conta')  # Filtrar pela conta
-  id_categoria = request.GET.get('id_categoria')  # Filtrar pela categoria
-  periodo = request.GET.get('periodo')  # Filtrar pelo período
+  id_conta = request.POST.get('id_conta')  # Filtrar pela conta
+  id_categoria = request.POST.get('id_categoria')  # Filtrar pela categoria
+  mes = request.POST.get('mes')
   saidas = []
 
+  if not mes:
+    movimentacao = movimentacao.filter(data__month=datetime.now().month) # Filtra e traz os valores do mês atual.
+    contas_mensais = contas_mensais.filter(pago_dia__month=datetime.now().month).filter(conta_paga=True) # Filtra e traz os valores do mês atual e contas pagas.
+  else:
+    data = mes.split('-')
+    movimentacao = movimentacao.filter(data__month=data[1]).filter(data__year=data[0])  # Filtra e traz os valores do mês selecionado.
+    contas_mensais = contas_mensais.filter(pago_dia__month=data[1]).filter(pago_dia__year=data[0]).filter(conta_paga=True) # Filtra e traz os valores do mês selecionado e contas pagas.
+
   if id_conta:
-    movimentacao = movimentacao.filter(conta__id=id_conta)
+    movimentacao = movimentacao.filter(conta_pagamento__id=id_conta)
     contas_mensais = contas_mensais.filter(conta_pagamento__id=id_conta)
   if id_categoria:
     movimentacao = movimentacao.filter(categoria__id=id_categoria)
     contas_mensais = contas_mensais.filter(categoria__id=id_categoria)
 
   for saida in movimentacao:
-    saidas += [{'conta': saida.conta_pagamento, 'categoria': saida.categoria, 'data': saida.data, 'tipo': saida.tipo, 'valor': saida.valor},]
+    saidas += [{'conta': saida.conta_pagamento, 'titulo': saida.titulo, 'categoria': saida.categoria, 'data': saida.data, 'tipo': saida.tipo, 'valor': saida.valor},]
   for saida in contas_mensais:
-    saidas += [{'conta': saida.conta_pagamento, 'categoria': saida.categoria, 'data': saida.pago_dia, 'tipo': saida.categoria.tipo, 'valor': saida.valor},]
+    saidas += [{'conta': saida.conta_pagamento, 'titulo': saida.titulo, 'categoria': saida.categoria, 'data': saida.pago_dia, 'tipo': saida.categoria.tipo, 'valor': saida.valor},]
 
-  saidas = sorted(saidas, key=lambda x: x['data'])  # Ordenando a lista de saídas pela data de pagamento.
-  saidas.reverse()
+  if saidas:
+    saidas = sorted(saidas, key=lambda x: x['data'])  # Ordenando a lista de saídas pela data de pagamento.
+    saidas.reverse()
 
-  # Fazer  filtrar por período.
-  # if periodo:
-  #   periodo = datetime.now().day - int(periodo)
-  #   if periodo < 0:
-  #     periodo = 1
-  #   movimentacao = movimentacao.filter()
-  
   return render(request, 'extrato.html', {
     'contas': contas,
     'categorias': categorias,
@@ -58,12 +60,15 @@ def exportar_pdf(request):
   movimentacao = Movimentacao.objects.filter(data__month=datetime.now().month) # Filtra e traz as saídas e entradas do mês atual.
   contas_mensais = ContasMensais.objects.filter(pago_dia__month=datetime.now().month).filter(conta_paga=True) # Filtra e traz as contas mensais do mês atual.
   data = datetime.now().date()
+  mes = request.POST.get('mes')
   saidas = []
 
+  print(mes)
+
   for saida in movimentacao:
-    saidas += [{'conta': saida.conta_pagamento, 'categoria': saida.categoria, 'data': saida.data, 'tipo': saida.tipo, 'valor': saida.valor},]
+    saidas += [{'conta': saida.conta_pagamento, 'titulo': saida.titulo, 'categoria': saida.categoria, 'data': saida.data, 'tipo': saida.tipo, 'valor': saida.valor},]
   for saida in contas_mensais:
-    saidas += [{'conta': saida.conta_pagamento, 'categoria': saida.categoria, 'data': saida.pago_dia, 'tipo': saida.categoria.tipo, 'valor': saida.valor},]
+    saidas += [{'conta': saida.conta_pagamento, 'titulo': saida.titulo, 'categoria': saida.categoria, 'data': saida.pago_dia, 'tipo': saida.categoria.tipo, 'valor': saida.valor},]
 
   saidas = sorted(saidas, key=lambda x: x['data'])  # Ordenando a lista de saídas pela data de pagamento.
 

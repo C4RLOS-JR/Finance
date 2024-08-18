@@ -26,7 +26,7 @@ def movimentacao(request, tipo_movimentacao):
     id_conta = request.POST.get('id_conta')
     valor = valor.replace(',', '.')
 
-    if (len(titulo.strip())==0) or (len(valor.strip())==0) or (len(data)==0):
+    if (len(titulo.strip())==0) or (len(valor.strip())==0) or (len(categoria)==0) or (len(data)==0) or (len(id_conta)==0):
       messages.add_message(request, constants.ERROR, 'Preencha todos os campos!')
       return redirect(f'../movimentacao/{tipo_movimentacao}')
 
@@ -65,10 +65,10 @@ def contas_mensais(request):
 
     categorias = Categoria.objects.all()
     contas = ContasMensais.objects.all().order_by('dia_vencimento')
-    contas_pagas = contas.filter(conta_paga=True)
-    contas_vencidas = contas.filter(dia_vencimento__lt=DATA_ATUAL).exclude(id__in=contas_pagas)  # Filtra pelas contas que tem o dia de pagamento menor que o dia atual e que seu "id" não esteja em "contas_pagas".
-    contas_proximas_vencimento = contas.filter(dia_vencimento__gte=DATA_ATUAL).filter(dia_vencimento__day__lte=DATA_ATUAL.day+5).exclude(id__in=contas_pagas)
-    contas_restantes = contas.exclude(id__in=contas_pagas).exclude(id__in=contas_vencidas).exclude(id__in=contas_proximas_vencimento)
+    contas_pagas = contas.filter(pago_dia__month=datetime.now().month).filter(conta_paga=True)
+    contas_vencidas = contas.filter(dia_vencimento__month=datetime.now().month).filter(dia_vencimento__lt=DATA_ATUAL).exclude(id__in=contas_pagas)  # Filtra pelas contas que tem o dia de pagamento menor que o dia atual e que seu "id" não esteja em "contas_pagas".
+    contas_proximas_vencimento = contas.filter(dia_vencimento__month=datetime.now().month).filter(dia_vencimento__gte=DATA_ATUAL).filter(dia_vencimento__day__lte=DATA_ATUAL.day+5).exclude(id__in=contas_pagas)
+    contas_restantes = contas.filter(dia_vencimento__month=datetime.now().month).exclude(id__in=contas_pagas).exclude(id__in=contas_vencidas).exclude(id__in=contas_proximas_vencimento)
 
     return render(request, 'contas_mensais.html', {
       'categorias': categorias,

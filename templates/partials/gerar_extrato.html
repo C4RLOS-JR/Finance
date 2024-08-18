@@ -1,7 +1,5 @@
 {% load static %}
 
-<div class="card">
-
   <label style="font-size: 40px;">Extrato do mês</label>  
   <label style="float: right">({{data}})</label>
   <br>
@@ -9,27 +7,28 @@
 
   <table>
     <tr>
-      <th style="width: 25%; border-bottom: 1px solid black; text-align: center">Conta</th>
-      <th style="width: 25%; border-bottom: 1px solid black; text-align: center">Categoria</th>
+      <th style="width: 20%; border-bottom: 1px solid black; text-align: center">Conta</th>
+      <th style="width: 20%; border-bottom: 1px solid black; text-align: center">Título</th>
+      <th style="width: 20%; border-bottom: 1px solid black; text-align: center">Categoria</th>
       <th style="width: 10%; border-bottom: 1px solid black; text-align: center">Data</th>
       <th style="width: 15%; border-bottom: 1px solid black; text-align: center">Tipo</th>
       <th style="width: 15%; border-bottom: 1px solid black; text-align: center">Valor</th>
     </tr>
     {% for saida in saidas %}
       <tr class="linha">
-        <td>{{saida.conta}}</td>
-        <td style="text-align: center">{{saida.categoria}}</td>
-        <td style="text-align: center">{{saida.data|date:"d/m/Y"}}</td>
-        <td style="text-align: center">
+        <td style="text-align: center; font-size: 10px;">{{saida.conta}}</td>
+        <td style="text-align: center; font-size: 10px;">{{saida.titulo}}</td>
+        <td style="text-align: center; font-size: 10px;">{{saida.categoria}}</td>
+        <td style="text-align: center; font-size: 10px;">{{saida.data|date:"d/m/Y"}}</td>
+        <td style="text-align: center; font-size: 10px;">
           {% if saida.tipo == 'S'%}
-            <span>Saída</span>
+            <span style="text-align: center; font-size: 10px;">Saída</span>
           {% else %}
-            <span>Entrada</span>
+            <span style="text-align: center; font-size: 10px;">Entrada</span>
           {% endif %}
         </td>
-        <td ><span  style="text-align: left">&nbspR$</span><span style="float: right">{{saida.valor|floatformat:2}}</span></td>
+        <td style="text-align: right; font-size: 10px;">{{saida.valor|floatformat:2}} R$</td>
       </tr>
     {% endfor %}
   </table>
     
-</div>

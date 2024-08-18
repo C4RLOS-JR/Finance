@@ -132,7 +132,8 @@
                     {{conta.titulo}}
                   </div>
                   <div class="col-md text-center">
-                    Foi paga dia - {{conta.pago_dia|date:"d/m/Y"}}
+                    <label>Vencimento dia - {{conta.dia_vencimento|date:"d/m/Y"}}</label>
+                    <label>Foi paga dia - {{conta.pago_dia|date:"d/m/Y"}}</label>
                   </div>
                   <div class="col-md text-center">
                     Valor pago R$ {{conta.valor|floatformat:2}}
