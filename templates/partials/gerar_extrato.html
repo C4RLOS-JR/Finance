@@ -1,7 +1,11 @@
 {% load static %}
 
-  <label style="font-size: 40px;">Extrato do mês</label>  
-  <label style="float: right">({{data}})</label>
+  <label style="font-size: 40px;">Extrato do mês</label>
+  {% if not mes or mes == 'None' %}
+    <label style="float: right">({{data}})</label>
+  {% else  %}
+    <label style="float: right">({{mes}})</label>
+  {% endif %}
   <br>
   <br>
 

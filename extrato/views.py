@@ -47,7 +47,10 @@ def ver_extrato(request):
   return render(request, 'extrato.html', {
     'contas': contas,
     'categorias': categorias,
-    'saidas': saidas})
+    'saidas': saidas,
+    'id_conta': id_conta,
+    'id_categoria': id_categoria,
+    'mes': mes})
 
 
 def extrato_transferencias(request):
@@ -57,23 +60,41 @@ def extrato_transferencias(request):
 
 
 def exportar_pdf(request):
-  movimentacao = Movimentacao.objects.filter(data__month=datetime.now().month) # Filtra e traz as saídas e entradas do mês atual.
-  contas_mensais = ContasMensais.objects.filter(pago_dia__month=datetime.now().month).filter(conta_paga=True) # Filtra e traz as contas mensais do mês atual.
+  movimentacao = Movimentacao.objects.all()
+  contas_mensais = ContasMensais.objects.all()
   data = datetime.now().date()
-  mes = request.POST.get('mes')
+  id_conta = request.GET.get('id_conta')  # Filtrar pela conta
+  id_categoria = request.GET.get('id_categoria')  # Filtrar pela categoria
+  mes = request.GET.get('mes')
   saidas = []
 
-  print(mes)
+  if mes == 'None' or not mes:
+    movimentacao = movimentacao.filter(data__month=datetime.now().month) # Filtra e traz os valores do mês atual.
+    contas_mensais = contas_mensais.filter(pago_dia__month=datetime.now().month).filter(conta_paga=True) # Filtra e traz os valores do mês atual e contas pagas.
+  else:
+    data = mes.split('-')
+    mes = f'{data[1]}/{data[0]}'
+    movimentacao = movimentacao.filter(data__month=data[1]).filter(data__year=data[0])  # Filtra e traz os valores do mês selecionado.
+    contas_mensais = contas_mensais.filter(pago_dia__month=data[1]).filter(pago_dia__year=data[0]).filter(conta_paga=True) # Filtra e traz os valores do mês selecionado e contas pagas.
+
+  if id_conta and id_conta != 'None':
+    movimentacao = movimentacao.filter(conta_pagamento__id=id_conta)
+    contas_mensais = contas_mensais.filter(conta_pagamento__id=id_conta)
+  if id_categoria and id_categoria != 'None':
+    movimentacao = movimentacao.filter(categoria__id=id_categoria)
+    contas_mensais = contas_mensais.filter(categoria__id=id_categoria)
 
   for saida in movimentacao:
     saidas += [{'conta': saida.conta_pagamento, 'titulo': saida.titulo, 'categoria': saida.categoria, 'data': saida.data, 'tipo': saida.tipo, 'valor': saida.valor},]
   for saida in contas_mensais:
     saidas += [{'conta': saida.conta_pagamento, 'titulo': saida.titulo, 'categoria': saida.categoria, 'data': saida.pago_dia, 'tipo': saida.categoria.tipo, 'valor': saida.valor},]
 
-  saidas = sorted(saidas, key=lambda x: x['data'])  # Ordenando a lista de saídas pela data de pagamento.
+  if saidas:
+    saidas = sorted(saidas, key=lambda x: x['data'])  # Ordenando a lista de saídas pela data de pagamento.
+    saidas.reverse()
 
   path_template = os.path.join(settings.BASE_DIR, 'templates/partials/gerar_extrato.html')  # Salva o caminho de HTML na variável.
-  template_render = render_to_string(path_template, {'saidas': saidas, 'data': data}) # Converte o HTML em string.
+  template_render = render_to_string(path_template, {'saidas': saidas, 'data': data, 'mes': mes}) # Converte o HTML em string.
 
   path_output = BytesIO() # Cria uma instância em memória.
   HTML(string=template_render).write_pdf(path_output) # Escreve o HTML e salva na instância da memória.

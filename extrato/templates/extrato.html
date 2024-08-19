@@ -42,7 +42,7 @@
         <div class="col-md">
           <label>Mês</label>
           <br>
-          <input type="month" name="mes" class="form-control" placeholder="Selecione um mês">
+          <input type="month" name="mes" class="form-control">
         </div>  
       </div>
       <br>
@@ -56,9 +56,9 @@
         <div class="col-md-2">
           <a href="{% url 'ver_extrato' %}" style="width: 100%" type="button" class="botao-principal">Este mês</a>
         </div>
-
+        
         <div class="col-md-2">
-          <a href="{% url 'exportar_pdf' %}" class="botao-secundario">Exportar extrato</a>
+          <a href="{% url 'exportar_pdf' %}?mes={{mes}}&id_conta={{id_conta}}&id_categoria={{id_categoria}}" class="botao-secundario">Exportar extrato</a>
         </div>
 
         <div class="col-md-3">
@@ -77,12 +77,12 @@
         
       <table>
         <tr>
-          <th style="width: 20%; border-bottom: 1px solid black; text-align: center">Conta</th>
-          <th style="width: 20%; border-bottom: 1px solid black; text-align: center">Título</th>
-          <th style="width: 20%; border-bottom: 1px solid black; text-align: center">Categoria</th>
-          <th style="width: 10%; border-bottom: 1px solid black; text-align: center">Data</th>
-          <th style="width: 15%; border-bottom: 1px solid black; text-align: center">Tipo</th>
-          <th style="width: 15%; border-bottom: 1px solid black; text-align: center">Valor</th>
+          <th style="width: 20%; text-align: center">Conta</th>
+          <th style="width: 20%; text-align: center">Título</th>
+          <th style="width: 20%; text-align: center">Categoria</th>
+          <th style="width: 10%; text-align: center">Data</th>
+          <th style="width: 15%; text-align: center">Tipo</th>
+          <th style="width: 15%; text-align: center">Valor</th>
         </tr>
         
         {% for saida in saidas %}

@@ -123,6 +123,10 @@ def cadastrar_categoria(request):
     messages.add_message(request, constants.ERROR, 'O campo categoria não pode ficar em branco!')
     return redirect('gerenciar')
 
+  if not tipo:
+    messages.add_message(request, constants.ERROR, 'Selecione o tipo da categoria!')
+    return redirect('gerenciar')
+
   try:
     nova_categoria = Categoria(
       categoria = categoria,
